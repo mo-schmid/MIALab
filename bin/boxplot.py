@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+import pandas as pd
+import os
+import glob
 
 def main():
     # todo: load the "results.csv" file from the mia-results directory
@@ -9,8 +11,14 @@ def main():
 
     # alternative: instead of manually loading/reading the csv file you could also use the pandas package
     # but you will need to install it first ('pip install pandas') and import it to this file ('import pandas as pd')
-    pass  # pass is just a placeholder if there is no other code
+    # pass is just a placeholder if there is no other code
 
+    os.chdir('mia-result/')
+    result_path = glob.glob('*/results.csv')[0]
+
+    result = pd.read_csv(result_path, ";")
+    boxplot = result.boxplot(column='DICE', by="LABEL")
+    plt.show()
 
 if __name__ == '__main__':
     main()
