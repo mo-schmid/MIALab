@@ -169,6 +169,7 @@ $RECYCLE.BIN/
 .idea/**/tasks.xml
 .idea/**/Project_Default.xml
 .idea/dictionaries
+.idea/inspectionProfiles
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
