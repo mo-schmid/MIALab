@@ -113,12 +113,12 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
+   \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
+  \graphicspath{{../img/}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+   \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \else
   % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
   % will default to the driver specified in the system graphics.cfg if no
@@ -358,7 +358,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Bare Demo of IEEEtran.cls\\ for IEEE Journals}
+\title{Automatic brain tissue segmentation in MR images using Random Forests and Conditional Random Fields}
 %
 %
 % author names and IEEE memberships
@@ -370,14 +370,14 @@
 % was not built to handle multiple paragraphs
 %
 
-\author{Michael~Shell,~\IEEEmembership{Member,~IEEE,}
-        John~Doe,~\IEEEmembership{Fellow,~OSA,}
-        and~Jane~Doe,~\IEEEmembership{Life~Fellow,~IEEE}% <-this % stops a space
-\thanks{M. Shell was with the Department
-of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,
-GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this % stops a space
-\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
-\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
+\author{Marco~Lauria,~\IEEEmembership{Student,~Unibe,}
+        Robert~Münger,~\IEEEmembership{Student~Unibe,}
+        and~Moritz~Schmid,~\IEEEmembership{Student,~Unibe}}% <-this % stops a space
+%\thanks{M. Shell was with the Department
+%of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,
+%GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this % stops a space
+%\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+%\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
 
 % note the % following the last \IEEEmembership and also \thanks - 
 % these prevent an unwanted space from occurring between the last author name
@@ -400,7 +400,7 @@ GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this %
 
 
 % The paper headers
-\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+\markboth{Medical Image Analisys Lab, HS2020-2021}%
 {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
 % The only time the second header will appear is for the odd numbered pages
 % after the title page when using the twoside option.
@@ -475,25 +475,29 @@ IEEE, IEEEtran, journal, \LaTeX, paper, template.
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
-for IEEE journal papers produced under \LaTeX\ using
-IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
+\IEEEPARstart{P}{rogression} of neurodegenerative diseases can be tracked by the atrophy of brain tissues.
+Manual segmentation / measurement is very time consuming - not a viable option in clinical practice. \newline
+In this paper the goal is the segmentation of grey matter, white matter, hippocampus, amygdala and thalamus. 
+Grey matter mostly consist of neuronal cell bodies which are unmyelinated. White matter consist mostly myelinated axons. These are connecting the GM areas. Hippocampus is the brain part where the learning and memory occurs. Amygdala is for emotions and aggressions and the thalamus is the the relay center for sensory informations. These parts are crucial for a good neurosurgeon to plan and simulate the procedure accurate and preciecly.
+%\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
+%\item{Grey matter (GM): Mostly neuronal cell
+%bodies, unmyelinated}
+%\item{White matter (WM): Mostly myelinated axons, connecting GM areas}
+%\item{Hippocampus (Learning and Memory)}
+%\item{Amygdala (Emotions and Aggressions)}
+%\item{Thalamus (Relay Center for Sensory Information)}
+%\end{itemize}
 
-\hfill mds
- 
-\hfill August 26, 2015
 
-\subsection{Subsection Heading Here}
-Subsection text here.
 
-% needed in second column of first page if using \IEEEpubid
-%\IEEEpubidadjcol
-
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
+%\subsection{Subsection Heading Here}
+%Subsection text here.
+%
+%% needed in second column of first page if using \IEEEpubid
+%%\IEEEpubidadjcol
+%
+%\subsubsection{Subsubsection Heading Here}
+%Subsubsection text here.
 
 
 % An example of a floating figure using the graphicx package.
@@ -592,7 +596,44 @@ Subsubsection text here.
 
 
 \section{Materials and Methods}
-Material and Methods go here
+
+Detailed Outline:
+
+\subsection{Material}
+\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
+\item{30 unrelated healthy subjects from the Human Connectome Project data set}
+\item{3 tesla MR T1- and T2-weighted images with ground truth}
+\item{Images with skull are defaced for anonymization}
+\end{itemize}
+\subsection{Methods}
+\begin{figure}[h!t]
+\centering
+
+\includegraphics[width=63.5mm]{img/pipeline}
+\caption{Pipeline.}
+\label{fig_pipeline}
+\end{figure}
+
+\textbf{Registration}\newline
+Alignment of the images to a common reference space named atlas
+\newline
+\textbf{Preprocessing}\newline
+Alignment of the images to a common reference space named atlas
+\newline
+\textbf{Feature Extraction}\newline
+Finding of representing features for brain tissues
+\newline
+\textbf{Classification}\newline
+Predicts to which label or class a voxel belongs
+\newline
+\textbf{Postprocessing}\newline
+Improvement the segmentation accuracy after the classification (Main focus of our group)
+
+
+
+
+
+
 \section{Results}
 Results go here
 \section{Discussion}
