@@ -15,6 +15,7 @@ def main():
 
     os.chdir('mia-result/')
     result_path = glob.glob('*/results.csv')[0]
+    seg_path = glob.glob('*/117122_SEG-PP.mha')[0]
 
     result = pd.read_csv(result_path, ";")
     boxplot = result.boxplot(column='DICE', by="LABEL")
