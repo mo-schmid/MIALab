@@ -30,9 +30,29 @@ class ImagePostProcessing(pymia_fltr.Filter):
         """
 
         # todo: replace this filter by a post-processing - or do we need post-processing at all?
-        warnings.warn('No post-processing implemented. Can you think about something?')
+        # warnings.warn('No post-processing implemented. Can you think about something?')
+        img_statistic = sitk.StatisticsImageFilter()
+        img_statistic.Execute(image)
 
-        return image
+        min_val = int(img_statistic.GetMinimum())
+        max_val = int(img_statistic.GetMaximum())
+
+        # create empty output image
+        img_out = sitk.Image(image.GetSize(), image.GetPixelIDValue())
+        img_out.CopyInformation(image)
+
+        # setup connected components filter
+        connected_comp_filter = sitk.ConnectedComponentImageFilter()
+        connected_comp_filter.FullyConnectedOn()
+
+        # extract largest segment
+        for label in range(min_val + 1, max_val + 1):
+            img_label = image == label
+            seg = connected_comp_filter.Execute(img_label != 0)
+            seg = (sitk.RelabelComponent(seg) == 1) * label
+            img_out = img_out + seg
+        
+        return img_out
 
     def __str__(self):
         """Gets a printable string representation.
