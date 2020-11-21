@@ -12,6 +12,24 @@ import SimpleITK as sitk
 import mialab.filtering.postprocess_filter as pp_filter
 
 
+class ImagePostProcessingParam(pymia_fltr.FilterParams):
+    """Dense CRF parameters."""
+    def __init__(self, img_proba: sitk.Image, variance: float, preserve_background: bool ):
+        """Initializes a new instance of the ImagePostProcessingParam
+
+        Args:
+            img_proba (sitk.Image): The posterior probability image.
+            variance (float): the variance used for the gaussian smoothing of the probability image
+            preserve_background (bool): defines if the background should be treated similar to a normal label
+
+        """
+        self.img_proba = img_proba
+        self.variance = variance
+        self.preserve_background = preserve_background
+
+
+
+
 class ImagePostProcessing(pymia_fltr.Filter):
     """Represents a post-processing filter."""
 
@@ -33,8 +51,9 @@ class ImagePostProcessing(pymia_fltr.Filter):
         # todo: replace this filter by a post-processing - or do we need post-processing at all?
         #warnings.warn('No post-processing implemented. Can you think about something?')
 
-        image_out = pp_filter.binary_fill_keyhole(pp_filter.get_largest_segment(image))
-
+        image_out = pp_filter.fill_keyhole_probabilistic(image, params.img_proba,
+                                                         variance = params.variance,
+                                                         preserve_background = params.preserve_background)
 
         return image_out
 

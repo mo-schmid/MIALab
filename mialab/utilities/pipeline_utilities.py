@@ -275,6 +275,9 @@ def post_process(img: structure.BrainImage, segmentation: sitk.Image, probabilit
     pipeline = fltr.FilterPipeline()
     if kwargs.get('simple_post', False):
         pipeline.add_filter(fltr_postp.ImagePostProcessing())
+        pipeline.set_param(fltr_postp.ImagePostProcessingParam(probability,
+                                                               variance=kwargs.get('variance', 1.0),
+                                                               preserve_background=kwargs.get('preserve_background', False)), len(pipeline.filters) - 1)
     if kwargs.get('crf_post', False):
         pipeline.add_filter(fltr_postp.DenseCRF())
         pipeline.set_param(fltr_postp.DenseCRFParams(img.images[structure.BrainImageTypes.T1w],

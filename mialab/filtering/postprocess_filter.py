@@ -72,18 +72,18 @@ def get_largest_segment(image: sitk.Image, extract_background = False) -> sitk.I
             seg = (sitk.RelabelComponent(seg) == 1) * label
         img_out = img_out + seg
 
-    arr_image = sitk.GetArrayFromImage(img_out)
-    plt.imshow(arr_image[60,:,:], cmap='jet')
-    plt.show()
+    # arr_image = sitk.GetArrayFromImage(img_out)
+    # plt.imshow(arr_image[60,:,:], cmap='jet')
+    # plt.show()
 
     return img_out
 
 
-def fill_keyhole_probabilistic(image: sitk.Image, image_prob: sitk.Image, preserve_background = True) -> sitk.Image:
+def fill_keyhole_probabilistic(image: sitk.Image, image_prob: sitk.Image,variance = 1.0, preserve_background = True) -> sitk.Image:
 
     # preprocess images
     image = get_largest_segment(image, extract_background=preserve_background)
-    image_prob = smooth_probabilities(image_prob, variance=1.0)
+    image_prob = smooth_probabilities(image_prob, variance=variance)
 
     # convert to numpy array to process the image
     arr_image = sitk.GetArrayFromImage(image)
@@ -198,7 +198,7 @@ if __name__ == "__main__":
         # images_pp.append(binary_fill_keyhole(images_prediction[i]))
         # images_pp.append(connected_segments(images_prediction[i]))
         # images_pp.append(smooth_probabilities(images_probabilities[i]))
-        images_pp.append(fill_keyhole_probabilistic(images_prediction[i],images_probabilities[i]))
+        images_pp.append(fill_keyhole_probabilistic(images_prediction[i],images_probabilities[i]),1.0, False)
         # images_pp.append(binary_fill_keyhole(connected_segments(images_prediction[i])))
 
     # =======================================================================================================================
@@ -211,9 +211,12 @@ if __name__ == "__main__":
 
         completeName = os.path.join(result_dir, t + ".txt")
         file1 = open(completeName, "w+")
-        file1.write("post processing based on result: " + str(dataset))
-        file1.write("\n segments with highest probability based on a smoothed probability image with variance = 1 \n"
-                    "the biggest background segment is preserved    ")
+        file1.write("post processing based on result: " + str(dataset) +"\n")
+        file1.write("segments with highest probability based on a smoothed probability image \n "
+                    "Parameter:\n"
+                    "Function: fill_keyhole_probabilistic\n"
+                    "variance = 1 \n"
+                    "preserve background = False")
         file1.close()
 
         for i, id in enumerate(image_ids):
