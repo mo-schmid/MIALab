@@ -30,7 +30,7 @@ class ImagePostProcessing(pymia_fltr.Filter):
         """
 
         # todo: replace this filter by a post-processing - or do we need post-processing at all?
-        warnings.warn('No post-processing implemented. Can you think about something?')
+        # warnings.warn('No post-processing implemented. Can you think about something?')
 
         return image
 
@@ -70,7 +70,7 @@ class DenseCRF(pymia_fltr.Filter):
         """Initializes a new instance of the DenseCRF class."""
         super().__init__()
 
-    def execute(self, image: sitk.Image, params: DenseCRFParams = None) -> sitk.Image:
+    def execute(self, image: sitk.Image, params: DenseCRFParams = None, dcrf=None) -> sitk.Image:
         """Executes the dCRF regularization.
 
         Args:
@@ -97,7 +97,8 @@ class DenseCRF(pymia_fltr.Filter):
         img_proba = np.rollaxis(img_proba, 3, 0)
 
         d = crf.DenseCRF(x * y * z, no_labels)  # width, height, nlabels
-        U = crf_util.unary_from_softmax(img_proba)
+        U = crf_util.unary_from_softmax(np.ascontiguousarray(img_proba))
+
         d.setUnaryEnergy(U)
 
         stack = np.stack([img_t2, img_ir], axis=3)
@@ -107,7 +108,9 @@ class DenseCRF(pymia_fltr.Filter):
         # the strength of the location and image content bilaterals, respectively.
 
         # higher weight equals stronger
+        # TODO: sdim chammer da versueche apasse, evlt au die andere parameter wonni noni kenne
         pairwise_energy = crf_util.create_pairwise_bilateral(sdims=(1, 1, 1), schan=(1, 1), img=stack, chdim=3)
+
 
         # `compat` (Compatibility) is the "strength" of this potential.
         compat = 10
@@ -120,11 +123,12 @@ class DenseCRF(pymia_fltr.Filter):
                             normalization=crf.NORMALIZE_SYMMETRIC)
 
         # add location only
-        pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5,.5,.5), shape=(x, y, z))
-
-        d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
-                            kernel=dcrf.DIAG_KERNEL,
-                            normalization=dcrf.NORMALIZE_SYMMETRIC)
+        # TODO: da pariwise_gaussian chönnt mer au zum laufe bringe, (im video werden beid verwenden)
+        # pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5,.5,.5), shape=(x, y, z))
+        #
+        # d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
+        #                     kernel=dcrf.DIAG_KERNEL,
+        #                     normalization=dcrf.NORMALIZE_SYMMETRIC)
 
         # compatibility, kernel and normalization
         Q_unary = d.inference(10)

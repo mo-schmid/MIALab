@@ -15,7 +15,7 @@ REQUIRED_PACKAGES = [
     'pymia == 0.3.1',
     'scikit-learn >= 0.23.2',
     'pathos >= 0.2.6',
-    # 'pydensecrf >= 1.0rc3',
+    'pydensecrf >= 1.0rc3',
     'sphinx >= 3.2.1',
     'sphinx_rtd_theme >= 0.5.0',
 ]
