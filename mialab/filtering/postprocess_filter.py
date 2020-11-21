@@ -44,11 +44,11 @@ def smooth_probabilities(image: sitk.Image, variance=1.0) -> sitk.Image:
     return img_out
 
 
-def get_largest_segment(image: sitk.Image) -> sitk.Image:
+def get_largest_segment(image: sitk.Image, extract_background = False) -> sitk.Image:
+
     # get number of labels
     img_statistic = sitk.StatisticsImageFilter()
     img_statistic.Execute(image)
-
     min_val = int(img_statistic.GetMinimum())
     max_val = int(img_statistic.GetMaximum())
 
@@ -61,38 +61,47 @@ def get_largest_segment(image: sitk.Image) -> sitk.Image:
     connected_comp_filter.FullyConnectedOn()
 
     # extract largest segment
-    for label in range(min_val + 1, max_val + 1):
+    for label in range(min_val, max_val + 1):
         img_label = image == label
         seg = connected_comp_filter.Execute(img_label != 0)
-        seg = (sitk.RelabelComponent(seg) == 1) * label
+
+        if label == 0:
+            # create temporary a new label for largest connected comp of the background
+            seg = (sitk.RelabelComponent(seg) == 1) * (max_val + 1)*extract_background
+        else:
+            seg = (sitk.RelabelComponent(seg) == 1) * label
         img_out = img_out + seg
 
-    # arr_image = sitk.GetArrayFromImage(img_out)
-    # plt.imshow(arr_image[:, :, 90], cmap='jet')
-    # plt.show()
+    arr_image = sitk.GetArrayFromImage(img_out)
+    plt.imshow(arr_image[60,:,:], cmap='jet')
+    plt.show()
 
     return img_out
 
 
-def fill_keyhole_probabilistic(image: sitk.Image, image_prob: sitk.Image) -> sitk.Image:
+def fill_keyhole_probabilistic(image: sitk.Image, image_prob: sitk.Image, preserve_background = True) -> sitk.Image:
 
+    # preprocess images
+    image = get_largest_segment(image, extract_background=preserve_background)
+    image_prob = smooth_probabilities(image_prob, variance=1.0)
+
+    # convert to numpy array to process the image
     arr_image = sitk.GetArrayFromImage(image)
     arr_prob = sitk.GetArrayFromImage(image_prob)
 
+    # fill holes based on the smoothed probability
     label_prob = np.argmax(arr_prob, axis=3)
-
     arr_image[arr_image == 0] = label_prob[arr_image == 0]
+
+    # remove the temporary label of the background
+    if preserve_background:
+        max_val = np.max(arr_image)
+        arr_image[arr_image == (max_val)] = 0
 
 
 
     img_out = sitk.GetImageFromArray(arr_image)
     img_out.CopyInformation(image)
-
-
-
-    # img_out = sitk.GetImageFromArray(label_prob)
-    # img_out.CopyInformation(image)
-
 
 
     # ##-------------------------------------------------------------------------------------------------------------------
@@ -165,8 +174,8 @@ if __name__ == "__main__":
     # string representing the folder where the segmented data is stored
     dataset = '2020-10-30-18-31-15'
 
-    # save_images = False
-    save_images = True
+    save_images = False
+    # save_images = True
 
     # load the label images
     images_prediction = []
@@ -189,7 +198,7 @@ if __name__ == "__main__":
         # images_pp.append(binary_fill_keyhole(images_prediction[i]))
         # images_pp.append(connected_segments(images_prediction[i]))
         # images_pp.append(smooth_probabilities(images_probabilities[i]))
-        images_pp.append(fill_keyhole_probabilistic(get_largest_segment(images_prediction[i]),smooth_probabilities(images_probabilities[i], variance=1)))
+        images_pp.append(fill_keyhole_probabilistic(images_prediction[i],images_probabilities[i]))
         # images_pp.append(binary_fill_keyhole(connected_segments(images_prediction[i])))
 
     # =======================================================================================================================
@@ -203,7 +212,8 @@ if __name__ == "__main__":
         completeName = os.path.join(result_dir, t + ".txt")
         file1 = open(completeName, "w+")
         file1.write("post processing based on result: " + str(dataset))
-        file1.write("\nsegments with highest probability based on a smoothed probability image with variance = 9    ")
+        file1.write("\n segments with highest probability based on a smoothed probability image with variance = 1 \n"
+                    "the biggest background segment is preserved    ")
         file1.close()
 
         for i, id in enumerate(image_ids):
