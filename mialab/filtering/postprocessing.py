@@ -9,6 +9,7 @@ import warnings
 # import pydensecrf.utils as crf_util
 import pymia.filtering.filter as pymia_fltr
 import SimpleITK as sitk
+import mialab.filtering.postprocess_filter as pp_filter
 
 
 class ImagePostProcessing(pymia_fltr.Filter):
@@ -30,9 +31,12 @@ class ImagePostProcessing(pymia_fltr.Filter):
         """
 
         # todo: replace this filter by a post-processing - or do we need post-processing at all?
-        warnings.warn('No post-processing implemented. Can you think about something?')
+        #warnings.warn('No post-processing implemented. Can you think about something?')
 
-        return image
+        image_out = pp_filter.binary_fill_keyhole(pp_filter.get_largest_segment(image))
+
+
+        return image_out
 
     def __str__(self):
         """Gets a printable string representation.

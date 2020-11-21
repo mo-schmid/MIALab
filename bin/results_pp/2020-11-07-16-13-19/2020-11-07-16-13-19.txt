@@ -1,0 +1,2 @@
+post processing based on result: 2020-10-30-18-31-15
+segments with highest probability based on a smoothed probability image with variance = 1

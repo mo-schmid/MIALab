@@ -73,6 +73,7 @@ def get_largest_segment(image: sitk.Image) -> sitk.Image:
 
     return img_out
 
+
 def fill_keyhole_probabilistic(image: sitk.Image, image_prob: sitk.Image) -> sitk.Image:
 
     arr_image = sitk.GetArrayFromImage(image)
@@ -111,7 +112,6 @@ def fill_keyhole_probabilistic(image: sitk.Image, image_prob: sitk.Image) -> sit
 
 
     return img_out
-
 
 
 def binary_fill_keyhole(image: sitk.Image) -> sitk.Image:

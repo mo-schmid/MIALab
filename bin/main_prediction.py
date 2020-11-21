@@ -8,6 +8,7 @@ import os
 import sys
 import timeit
 import warnings
+import pi
 
 import SimpleITK as sitk
 import sklearn.ensemble as sk_ensemble
