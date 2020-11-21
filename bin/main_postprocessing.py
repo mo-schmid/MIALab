@@ -139,11 +139,15 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
     images_prediction, images_probabilities = putil.load_prediction_images(images_test,
                                                                            tmp_result_dir,
                                                                            '2020-10-30-18-31-15')
-
+    # evaluate images without post-processing
+    for i, img in enumerate(images_test):
+        evaluator.evaluate(images_prediction[i], img.images[structure.BrainImageTypes.GroundTruth], img.id_)
 
 
     # post-process segmentation and evaluate with post-processing
-    post_process_params = {'simple_post': True}
+    post_process_params = {'simple_post': True,
+                           'variance': 1.0,
+                           'preserve_background': False}
     images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
                                                      post_process_params, multi_process=False)
 
