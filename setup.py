@@ -2,7 +2,7 @@ import sys
 from setuptools import find_packages, setup
 
 
-if sys.version_info < (3, 7):
+if sys.version_info < (3, 6):
     sys.exit("Requires Python 3.7 or higher")
 
 with open('README.rst') as f:
@@ -42,7 +42,7 @@ setup(
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Scientific/Engineering :: Image Recognition',
         'Topic :: Scientific/Engineering :: Mathematics',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
