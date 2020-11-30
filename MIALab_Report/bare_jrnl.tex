@@ -156,7 +156,7 @@
 
 % *** MATH PACKAGES ***
 %
-%\usepackage{amsmath}
+\usepackage{amsmath}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
 %
@@ -214,11 +214,11 @@
 
 
 % *** SUBFIGURE PACKAGES ***
-%\ifCLASSOPTIONcompsoc
-%  \usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
-%\else
-%  \usepackage[caption=false,font=footnotesize]{subfig}
-%\fi
+\ifCLASSOPTIONcompsoc
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\else
+\usepackage[caption=false,font=footnotesize]{subfig}
+\fi
 % subfig.sty, written by Steven Douglas Cochran, is the modern replacement
 % for subfigure.sty, the latter of which is no longer maintained and is
 % incompatible with some LaTeX packages including fixltx2e. However,
@@ -476,9 +476,10 @@ IEEE, IEEEtran, journal, \LaTeX, paper, template.
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
 \IEEEPARstart{P}{rogression} of neurodegenerative diseases can be tracked by the atrophy of brain tissues.
-Manual segmentation / measurement is very time consuming - not a viable option in clinical practice. \newline
-In this paper the goal is the segmentation of grey matter, white matter, hippocampus, amygdala and thalamus. 
-Grey matter mostly consist of neuronal cell bodies which are unmyelinated. White matter consist mostly myelinated axons. These are connecting the GM areas. Hippocampus is the brain part where the learning and memory occurs. Amygdala is for emotions and aggressions and the thalamus is the the relay center for sensory informations. These parts are crucial for a good neurosurgeon to plan and simulate the procedure accurate and preciecly.
+Manual segmentation / measurement is very time consuming and thus is not a viable option in clinical practice. 
+The goal of the pipeline describe in this paper is the segmentation of grey matter, white matter, hippocampus, amygdala, and thalamus. 
+Grey matter mostly consist of neuronal cell bodies, which are unmyelinated. White matter consist mostly myelinated axons. These myelinated axons are connected to the GM areas. In the Hippocampus occurs learning and memory. The Amygdala is responsible for our emotions and aggression, and the thalamus is the relay centre for sensory information. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may leads to less complication and higher success rate during the surgery. 
+In this paper we aim to improve the postprocessing of the segmentation. Probabilistic keyhole filling to remove small isolated regions was first introduced by XY, where an improvement of the segmented parts have been achieved. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In the paper XY, fully connected CRF Model was used to postprocess segmented images of cities and landscape images. Paper XZ used to improve the segmentation of an efficient multi-scale 3D convolutional neural network.  Hence, we propose improved segmentation of the parts described using probabilistic keyhole filling and conditional random field algorithm. The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the subchapter postprocessing including its process and procedures. The result section is divided by showing our accomplishments in each approach and at last the two approaches are compared. These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
 %\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
 %\item{Grey matter (GM): Mostly neuronal cell
 %bodies, unmyelinated}
@@ -627,19 +628,54 @@ Finding of representing features for brain tissues
 Predicts to which label or class a voxel belongs
 \newline
 \textbf{Postprocessing}\newline
-Improvement the segmentation accuracy after the classification (Main focus of our group)
+The predicted masks with the segmentation have some obvious mistakes, e.g., keyholes and rough borders. Our approach to solving this issue is by using probabilistic keyhole filling and fully connected conditional random field algorithm. 
 
+-- include explanation of keyhole filling --
 
+The CRF model was first published by Philipp Krähenbühl and Vladlen Koltun in NIPS 2011 [reference XY]. In Krähenbühl’s and Koltun’s paper the exact derivation of the model can be seen. For this paper the parameter appearance kernel and smoothness were adjusted to achieve the best results (see equation below).
+The appearance kernel takes into account that nearby pixels with similar colours are most probable in the same segmentation label. The smoothness kernel removes small keyholes. In the following equation, the influence of each parameter to the two-kernel potential can be seen:\newline
+
+\begin{gather*}
+k\left(f_i,f_j\right)\!=\\
+\omega^{\left(1\right)}  exp\left(-\frac{\left| p_i - p_j\right|^2}{2\theta^2_\alpha}-\frac{\left| I_i-I_j\right|^2}{2\theta^2_\beta}\right)\,+\,\omega^{\left(2\right)}   exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta^2_\gamma}\right)
+\end{gather*}
+Sigma alpha, Sigma beta for the appearance kernel and Sigma gamma for the smoothness kernel can be adjusted. The higher the value, the less influence this kernel has in the CRF model.
 
 
 
 
 \section{Results}
-Results go here
+The following table lists the parameters with the best corresponding total Hausdorff distances and Dice index.
+\begin{table}[!h]
+\centering
+\label{tab:my-table}
+\begin{tabular}{|l|c|c|c|c|r}
+
+\hline
+$\theta_\alpha$   & $\theta_\beta$   & $\theta_\gamma$    & Total Dice   & Total Hausdorff  \\
+100 & 100 & 1   & 5.4 & 5.4  \\\hline
+1   & 1   & 100 & 3.4 & 23.2 \\\hline
+..  & ..  & --  & ..  & ..  \\
+\hline
+\end{tabular}
+\caption{\label{tab:table-name}Comparing different parameters of fully connected CRF model with its resulting total Dice index and Hausdorff distances..}
+\end{table}
+The best scores of each segmentation are shown in the boxplots in figure 1 and 2. In Figure 1, the Hausdorff distances are plotted. In Figure 2, the Dice index is shown. \newline
+--boxplot--
+
+Figure 3 shows a graphical comparison between no postprocessing and using fully connected CRF. 
+\newline
+-- images --
+\newline
+>> here comes the same tables, boxplots and images using the other approach (be aware to have them ordered the same way throughout the whole paper) <<
+\newline
+>> here comes a comparison of the best results of each approach. A comparison of the tables with the total Dice index and Hausdorff distances. A comparison of the boxplots, and image comparison <<
+
+
 \section{Discussion}
-Discussion goes here
+Discussion goes here where pro and contra of each approach are explained 
 \section{Conclusion}
-The conclusion goes here.
+The conclusion goes here, where our favorite approach is mentioned and the arguments which lead us to this conclusion.
 
 
 
