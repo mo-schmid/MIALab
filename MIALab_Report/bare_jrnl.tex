@@ -628,6 +628,26 @@ Predicts to which label or class a voxel belongs
 \newline
 \textbf{Postprocessing}\newline
 Improvement the segmentation accuracy after the classification (Main focus of our group)
+\newline
+\textbf{Approach I: Probabilistic Keyhole Filling}\newline
+In this section we explain the basic concept and the procedure of the Probabilistic Keyhole filling (PKF). The Goal of the PFK is to incorporate prior knowledge into the post-processing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
+This means that within the local neighbourhood (26-connected) of one voxel, all voxels should carry the same label (unless it is a boundary voxel).
+
+
+
+*Goal: incorporate prior knowledge (connected structure and spatial coherence)\newline
+
+
+
+*Use probability information from segmentation to reassign labels\newline
+*Reassign all labels not connected to the largest connected label\newline
+
+In the following we present the individual steps of the PKF.\newline
+
+
+
+
+
 
 
 
