@@ -1,3 +1,4 @@
+pandas
 pydensecrf
 pathos==0.2.6
 pymia==0.3.1
