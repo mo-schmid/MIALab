@@ -124,11 +124,11 @@ class DenseCRF(pymia_fltr.Filter):
 
         # add location only
         # TODO: da pariwise_gaussian chönnt mer au zum laufe bringe, (im video werden beid verwenden)
-        # pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5,.5,.5), shape=(x, y, z))
+        #pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5,.5,.5), shape=(x, y, z))
         #
-        # d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
-        #                     kernel=dcrf.DIAG_KERNEL,
-        #                     normalization=dcrf.NORMALIZE_SYMMETRIC)
+        #d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
+        #                    kernel=dcrf.DIAG_KERNEL,
+        #                   normalization=dcrf.NORMALIZE_SYMMETRIC)
 
         # compatibility, kernel and normalization
         Q_unary = d.inference(10)

@@ -362,3 +362,25 @@ def post_process_batch(brain_images: t.List[structure.BrainImage], segmentations
     else:
         pp_images = [post_process(img, seg, prob, **post_process_params) for img, seg, prob in param_list]
     return pp_images
+
+def load_prediction_images(images_test: t.List[structure.BrainImage], tmp_result_dir: str, dataset: str) -> tuple((t.List[sitk.Image],t.List[sitk.Image])):
+    """ load stored pre-segmented data
+
+    Args:
+        images_test (t.List[structure.BrainImage]): Original images that were used for the prediction.
+        tmp_result_dir (str): path to tmp_result folder
+        dataset (str): name result folder of type 'YYYY-MM-DD-HH-MM-SS'
+
+    Returns:
+        List[sitk.Image]: list of stored data
+     """
+
+    images_prediction = []
+    images_probabilities = []
+
+    for img in images_test:
+
+        images_prediction.append(sitk.ReadImage(os.path.join(tmp_result_dir, dataset, (img.id_ + '_SEG.mha'))))
+        images_probabilities.append(sitk.ReadImage(os.path.join(tmp_result_dir, dataset, (img.id_ + '_PROB.mha' ))))
+
+    return (images_prediction, images_probabilities)
