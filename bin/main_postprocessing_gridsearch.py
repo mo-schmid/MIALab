@@ -9,6 +9,7 @@ import sys
 import timeit
 import warnings
 
+import json
 import SimpleITK as sitk
 import sklearn.ensemble as sk_ensemble
 import numpy as np
@@ -145,31 +146,62 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
     images_prediction, images_probabilities = putil.load_prediction_images(images_test,
                                                                            tmp_result_dir,
                                                                            '2020-10-30-18-31-15')
-    # # evaluate images without post-processing
-    # for i, img in enumerate(images_test):
-    #     evaluator.evaluate(images_prediction[i], img.images[structure.BrainImageTypes.GroundTruth], img.id_)
+
+
+
+    # evaluate images without post-processing
+    for i, img in enumerate(images_test):
+        evaluator.evaluate(images_prediction[i], img.images[structure.BrainImageTypes.GroundTruth], img.id_)
+
+
+    # save results without post-processing
+    name = 'no_PP'
+    sub_dir = os.path.join(result_dir, name)
+    os.makedirs(sub_dir, exist_ok=True)
+
+    result_file = os.path.join(sub_dir, 'results.csv')
+    writer.CSVWriter(result_file).write(evaluator.results)
+
+    # report also mean and standard deviation among all subjects
+    result_summary_file = os.path.join(sub_dir, 'results_summary.csv')
+    functions = {'MEAN': np.mean, 'STD': np.std}
+    writer.CSVStatisticsWriter(result_summary_file, functions=functions).write(evaluator.results)
+
+    # clear results such that the evaluator is ready for the next evaluation
+    evaluator.clear()
 
 
     # define paramter for grid search
     post_process_param_list = []
-    variance = np.arange(0.5, 3, 0.5)
+    variance = np.arange(1.0, 4.0)
     preserve_background = np.asarray([False, True])
 
     for bg in preserve_background:
         for var in variance:
-            post_process_param_list.append({'simple_post': True,
-                                        'variance': var,
-                                        'preserve_background': bg})
+            post_process_param_list.append({'simple_post': bool(True),
+                                            'variance': var,
+                                            'preserve_background': bool(bg)})
 
 
     # execute post processing with definde parameters
-
     for post_process_params in post_process_param_list:
 
+
+
+
+
+        # create sub-directory for results
         name = 'PP-V-'+ str(post_process_params.get('variance')).replace('.','_') +\
                '-BG-' + str(post_process_params.get('preserve_background'))
         sub_dir = os.path.join(result_dir, name)
         os.makedirs(sub_dir, exist_ok=True)
+
+        # todo: write the used parameter into a text file and store it in the result folder
+        completeName = os.path.join(sub_dir, "parameter.txt")
+        file1 = open(completeName, "w+")
+        json.dump(post_process_params, file1)
+        file1.close()
+
 
         # post-process segmentation and evaluate with post-processing
         images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
