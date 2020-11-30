@@ -107,6 +107,16 @@ class DenseCRF(pymia_fltr.Filter):
         # The two `s{dims,chan}` parameters are model hyper-parameters defining
         # the strength of the location and image content bilaterals, respectively.
 
+        # add location only
+        # TODO: da pariwise_gaussian chönnt mer au zum laufe bringe, (im video werden beid verwenden)
+        pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5, .5, .5), shape=(x, y, z))
+        #pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5, .5, .5), shape=img_proba.shape[:3])
+
+        d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
+                            kernel=crf.DIAG_KERNEL,
+                            normalization=crf.NORMALIZE_SYMMETRIC)
+
+
         # higher weight equals stronger
         # TODO: sdim chammer da versueche apasse, evlt au die andere parameter wonni noni kenne
         pairwise_energy = crf_util.create_pairwise_bilateral(sdims=(1, 1, 1), schan=(1, 1), img=stack, chdim=3)
@@ -122,13 +132,6 @@ class DenseCRF(pymia_fltr.Filter):
                             kernel=crf.DIAG_KERNEL,
                             normalization=crf.NORMALIZE_SYMMETRIC)
 
-        # add location only
-        # TODO: da pariwise_gaussian chönnt mer au zum laufe bringe, (im video werden beid verwenden)
-        #pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5,.5,.5), shape=(x, y, z))
-        #
-        #d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
-        #                    kernel=dcrf.DIAG_KERNEL,
-        #                   normalization=dcrf.NORMALIZE_SYMMETRIC)
 
         # compatibility, kernel and normalization
         Q_unary = d.inference(10)
