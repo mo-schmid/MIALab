@@ -2,7 +2,7 @@ import sys
 from setuptools import find_packages, setup
 
 
-if sys.version_info < (3, 7):
+if sys.version_info < (3, 6):
     sys.exit("Requires Python 3.7 or higher")
 
 with open('README.rst') as f:

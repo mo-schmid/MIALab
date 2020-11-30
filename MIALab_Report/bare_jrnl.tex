@@ -476,9 +476,10 @@ IEEE, IEEEtran, journal, \LaTeX, paper, template.
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
 \IEEEPARstart{P}{rogression} of neurodegenerative diseases can be tracked by the atrophy of brain tissues.
-Manual segmentation / measurement is very time consuming - not a viable option in clinical practice. \newline
-In this paper the goal is the segmentation of grey matter, white matter, hippocampus, amygdala and thalamus. 
-Grey matter mostly consist of neuronal cell bodies which are unmyelinated. White matter consist mostly myelinated axons. These are connecting the GM areas. Hippocampus is the brain part where the learning and memory occurs. Amygdala is for emotions and aggressions and the thalamus is the the relay center for sensory informations. These parts are crucial for a good neurosurgeon to plan and simulate the procedure accurate and preciecly.
+Manual segmentation / measurement is very time consuming and thus is not a viable option in clinical practice. \newline
+The goal of the pipeline describe in this paper is the segmentation of grey matter, white matter, hippocampus, amygdala, and thalamus. 
+Grey matter mostly consist of neuronal cell bodies, which are unmyelinated. White matter consist mostly myelinated axons. These myelinated axons are connected to the GM areas. In the Hippocampus occurs learning and memory. The Amygdala is responsible for our emotions and aggression, and the thalamus is the the relay center for sensory informations. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may leads to less complication and higher success rate during the surgery. 
+In this paper, the main focus is to improve the postprocessing of the segmentation. Probabilistic keyhole filling to remove small isolated regions was first introdced by XY, where a improvement of the segmented parts have been achieved. In recent studies postprocessing algorithm as condtional random field (CRF) achieved promising results. In the paper XY fully connected CRF Model was used to postprocess segmented images of cities and landscape images. Paper XZ used to improve the segmentation of an efficient mulit-scale 3D convolutional neural network.  Hence, we propose improved segmentation of the described parts using probabilistic keyhole filling and conditional random field algorithm. In the chapter Material and Methods a quick overview of the whole pipeline is described and in the subchapter postprocessing our main focus and its process and procedures are described. The chapter result is divided in showing our accomplishments in each approach and at last the two approaches are compared. These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion. 
 %\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
 %\item{Grey matter (GM): Mostly neuronal cell
 %bodies, unmyelinated}
@@ -627,7 +628,21 @@ Finding of representing features for brain tissues
 Predicts to which label or class a voxel belongs
 \newline
 \textbf{Postprocessing}\newline
-Improvement the segmentation accuracy after the classification (Main focus of our group)
+The predicted masks containing the segmentation have some obvious mistakes, e.g. keyholes and rough borders. Our approach to solve this issue is by using probabilistic keyhole filling and fully connected conditional random field algorithm. 
+\newline
+-- include explanation of keyhole filling --
+\newline
+The CRF model was first published by Efficient Inference in Fully Connected CRFs with Gaussian Edge Potentials
+Philipp Krähenbühl and Vladlen Koltun
+NIPS 2011. In this paper the exact derivation of the model can be seen. For this paper the parameter appearance kernel and smoothness were adjusted to achieve the best results.
+The appearance kernel takes into account that nearby pixels with similar colours are with a high probability in the same segmentation label. The smoothness kernel removes small keyholes. 
+The following table shows different parameters and the corresponding Hausdorff and Dice coefficients for each label. 
+
+
+
+
+
+
 
 
 
@@ -635,7 +650,13 @@ Improvement the segmentation accuracy after the classification (Main focus of ou
 
 
 \section{Results}
-Results go here
+draft of of boxplot output with correct image description
+table to express the values
+for both approaches
+
+a table which compares both algorithms
+images with both approaches
+
 \section{Discussion}
 Discussion goes here
 \section{Conclusion}

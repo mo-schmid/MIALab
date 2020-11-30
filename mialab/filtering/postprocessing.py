@@ -109,7 +109,7 @@ class DenseCRF(pymia_fltr.Filter):
 
         # higher weight equals stronger
         # TODO: sdim chammer da versueche apasse, evlt au die andere parameter wonni noni kenne
-        pairwise_energy = crf_util.create_pairwise_bilateral(sdims=(1, 1, 1), schan=(1, 1), img=stack, chdim=3)
+        pairwise_bilateral = crf_util.create_pairwise_bilateral(sdims=(80, 80, 80), schan=(13, 13), img=stack, chdim=3)
 
 
         # `compat` (Compatibility) is the "strength" of this potential.
@@ -118,17 +118,17 @@ class DenseCRF(pymia_fltr.Filter):
         # weight --> lower equals stronger
         # compat = np.array([[0, 10], [10, 1]], np.float32)
 
-        d.addPairwiseEnergy(pairwise_energy, compat=compat,
+        d.addPairwiseEnergy(pairwise_bilateral, compat=compat,
                             kernel=crf.DIAG_KERNEL,
                             normalization=crf.NORMALIZE_SYMMETRIC)
 
         # add location only
-        # TODO: da pariwise_gaussian chönnt mer au zum laufe bringe, (im video werden beid verwenden)
-        # pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5,.5,.5), shape=(x, y, z))
+        # TODO: sdims chammer au versueche az'passe
+        pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(5, 5, 5), shape=(x, y, z))
         #
-        # d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
-        #                     kernel=dcrf.DIAG_KERNEL,
-        #                     normalization=dcrf.NORMALIZE_SYMMETRIC)
+        d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
+                             kernel=crf.DIAG_KERNEL,
+                             normalization=crf.NORMALIZE_SYMMETRIC)
 
         # compatibility, kernel and normalization
         Q_unary = d.inference(10)

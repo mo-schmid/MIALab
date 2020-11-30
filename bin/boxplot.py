@@ -16,9 +16,16 @@ def main():
     os.chdir('mia-result/')
     result_path = glob.glob('*/results.csv')[0]
     seg_path = glob.glob('*/117122_SEG-PP.mha')[0]
+    print(result_path)
 
     result = pd.read_csv(result_path, ";")
+    plt.figure(1)
     boxplot = result.boxplot(column='DICE', by="LABEL")
+    plt.ylim(0, 1)
+    plt.figure(2)
+    boxplot = result.boxplot(column='HDRFDST', by="LABEL")
+    plt.ylim(0, 30)
+
     plt.show()
 
 if __name__ == '__main__':

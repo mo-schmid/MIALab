@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.2.7)  9 NOV 2020 22:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.2.7)  22 NOV 2020 21:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -226,37 +226,40 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 442.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 603.
+(Font)              <7> on input line 604.
 <img/pipeline.png, id=1, 1503.6175pt x 573.14125pt>
 File: img/pipeline.png Graphic file (type png)
 <use img/pipeline.png>
-Package pdftex.def Info: img/pipeline.png  used on input line 612.
+Package pdftex.def Info: img/pipeline.png  used on input line 613.
 (pdftex.def)             Requested size: 180.67499pt x 68.86143pt.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 713.
 
 [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
- <./img/pipeline.png>] (./bare_jrnl.aux) ) 
+ <./img/pipeline.png>]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 734.
+ [2
+
+] (./bare_jrnl.aux) ) 
 Here is how much of TeX's memory you used:
- 2282 strings out of 492616
- 37717 string characters out of 6129482
- 106161 words of memory out of 5000000
- 6187 multiletter control sequences out of 15000+600000
+ 2283 strings out of 492616
+ 37725 string characters out of 6129482
+ 108161 words of memory out of 5000000
+ 6188 multiletter control sequences out of 15000+600000
  45654 words of font info for 82 fonts, out of 8000000 for 9000
  1144 hyphenation exceptions out of 8191
- 41i,5n,25p,454b,214s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2019/texmf-dist/f
-onts/enc/dvips/base/8r.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/ti
-mes/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmbi8
-a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></us
-r/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on bare_jrnl.pdf (1 page, 289397 bytes).
+ 41i,6n,25p,1138b,214s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8
+r.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.
+pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/
+local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/tex
+live/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2019/
+texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on bare_jrnl.pdf (2 pages, 291796 bytes).
 PDF statistics:
- 32 PDF objects out of 1000 (max. 8388607)
- 21 compressed objects within 1 object stream
+ 35 PDF objects out of 1000 (max. 8388607)
+ 23 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
