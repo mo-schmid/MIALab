@@ -479,7 +479,7 @@ Random Tree Search, Postprocessing, Dense-CRF
 Manual segmentation and measurement is very time consuming and thus is not a viable option in clinical practice. 
 The goal of the pipeline describe in this paper is the segmentation of grey matter, white matter, hippocampus, amygdala, and thalamus. 
 Grey matter mostly consist of neuronal cell bodies, which are unmyelinated. White matter consist mostly myelinated axons. These myelinated axons are connected to the GM areas. In the Hippocampus occurs learning and memory. The Amygdala is responsible for our emotions and aggression, and the thalamus is the relay centre for sensory information. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may leads to less complication and higher success rate during the surgery. 
-In this paper we aim to improve the post-processing of the segmentation. Probabilistic keyhole filling to remove small isolated regions was first introduced by XY, where an improvement of the segmented parts have been achieved. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a recent study  fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}.  Hence, we propose improved segmentation of the parts described using probabilistic keyhole filling and conditional random field algorithm. The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the subchapter postprocessing including its process and procedures. The result section is divided by showing our accomplishments in each approach and at last the two approaches are compared. These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
+In this paper we aim to improve the post-processing of the segmentation. Probabilistic keyhole filling to remove small isolated regions was first introduced by XY, where an improvement of the segmented parts have been achieved. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a recent study  fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}.  Hence, we propose improved segmentation of the parts described using probabilistic keyhole filling and conditional random field algorithm. The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the sub-chapter post-processing including its process and procedures. The result section is divided by showing our accomplishments in each approach and at last the two approaches are compared. These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
 %\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
 %\item{Grey matter (GM): Mostly neuronal cell
 %bodies, unmyelinated}
@@ -600,8 +600,9 @@ In this paper we aim to improve the post-processing of the segmentation. Probabi
 
 Detailed Outline:
 
-\subsection{Material}
+\subsection{Data}
 \begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
+The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set
 \item{30 unrelated healthy subjects from the Human Connectome Project data set}
 \item{3 tesla MR T1- and T2-weighted images with ground truth}
 \item{Images with skull are defaced for anonymization}
