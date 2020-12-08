@@ -601,17 +601,18 @@ In this paper we aim to improve the post-processing of the segmentation. Probabi
 Detailed Outline:
 
 \subsection{Data}
-\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
-The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set
-\item{30 unrelated healthy subjects from the Human Connectome Project data set}
-\item{3 tesla MR T1- and T2-weighted images with ground truth}
-\item{Images with skull are defaced for anonymization}
-\end{itemize}
+%\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
+The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set.
+The Project data set contains 3 tesla MRI T1 and T2-weighted images with segmentations as ground truth. The data set containing skull are defaced to assure complete anonymous data set.
+%\item{30 unrelated healthy subjects from the Human Connectome Project data set}
+%\item{3 tesla MR T1- and T2-weighted images with ground truth}
+%\item{Images with skull are defaced for anonymization}
+%\end{itemize}
 \subsection{Methods}
-\begin{figure}[h!t]
+\begin{figure}[h!]
 \centering
 
-\includegraphics[width=63.5mm]{img/pipeline}
+\includegraphics[scale=0.25]{img/pipeline}
 \caption{Pipeline.}
 \label{fig_pipeline}
 \end{figure}
@@ -629,30 +630,30 @@ Finding of representing features for brain tissues
 Predicts to which label or class a voxel belongs
 \newline
 \textbf{Postprocessing}\newline
-<<<<<<< HEAD
 The predicted masks with the segmentation have some obvious mistakes, e.g., keyholes and rough borders. Our approach to solving this issue is by using probabilistic keyhole filling and fully connected conditional random field algorithm. 
-
--- include explanation of keyhole filling --
-
-The CRF model was first published by Philipp Krähenbühl and Vladlen Koltun in NIPS 2011 [reference XY]. In Krähenbühl’s and Koltun’s paper the exact derivation of the model can be seen. For this paper the parameter appearance kernel and smoothness were adjusted to achieve the best results (see equation below).
-The appearance kernel takes into account that nearby pixels with similar colours are most probable in the same segmentation label. The smoothness kernel removes small keyholes. In the following equation, the influence of each parameter to the two-kernel potential can be seen:\newline
-=======
-Improvement the segmentation accuracy after the classification (Main focus of our group)
 \newline
 \textbf{Approach I: Probabilistic Keyhole Filling}\newline
 In this section we explain the basic concept and the procedure of the Probabilistic Keyhole filling (PKF). The Goal of the PFK is to incorporate prior knowledge into the post-processing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
 This means that within the local neighbourhood (26-connected) of one voxel, all voxels should carry the same label (unless it is a boundary voxel).
+\textbf{Approach II: Dense Conditional Random Field (DCRF)}\newline
+The DCRF model was first published by Philipp Krähenbühl and Vladlen Koltun in NIPS 2011 \cite{Krahenbuhl2012}. In Krähenbühl’s and Koltun’s paper the exact derivation of the model can be seen. For this paper the parameter appearance kernel and smoothness were adjusted to achieve the best results .
+The appearance kernel takes into account that nearby pixels with similar colours are most probable in the same segmentation label. The smoothness kernel removes small keyholes. The following equation \ref{eq:1}, shows the influence of the adjustable parameter/weights to the two-kernel potential:\newline
+\begin{multline}\label{eq:1}
+    k\left(f_i,f_j\right)=\\
+\omega^{\left(1\right)}  exp\left(-\frac{\left| p_i - p_j\right|^2}{2\theta^2_\alpha}-\frac{\left| I_i-I_j\right|^2}{2\theta^2_\beta}\right)\\+\omega^{\left(2\right)}   exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta^2_\gamma}\right)
+\end{multline}
+
+$\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are weights of the equation an were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
+
+
+%*Goal: incorporate prior knowledge (connected structure and spatial coherence)\newline
 
 
 
-*Goal: incorporate prior knowledge (connected structure and spatial coherence)\newline
+%*Use probability information from segmentation to reassign labels\newline
+%*Reassign all labels not connected to the largest connected label\newline
 
-
-
-*Use probability information from segmentation to reassign labels\newline
-*Reassign all labels not connected to the largest connected label\newline
-
-In the following we present the individual steps of the PKF.\newline
+%In the following we present the individual steps of the PKF.\newline
 
 
 
@@ -661,13 +662,7 @@ In the following we present the individual steps of the PKF.\newline
 
 %>>>>>>> 2562d745cd3dc9a9104288b8d7da0d266973a317
 
-\begin{multline}\label{eq:1}
-    k\left(f_i,f_j\right)=\\
-\omega^{\left(1\right)}  exp\left(-\frac{\left| p_i - p_j\right|^2}{2\theta^2_\alpha}-\frac{\left| I_i-I_j\right|^2}{2\theta^2_\beta}\right)\\+\omega^{\left(2\right)}   exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta^2_\gamma}\right)
-\end{multline}
 
-
-Sigma alpha, Sigma beta for the appearance kernel and Sigma gamma for the smoothness kernel can be adjusted. The higher the value, the less influence this kernel has in the CRF model.
 
 
 
@@ -686,6 +681,7 @@ $\theta_\alpha$   & $\theta_\beta$   & $\theta_\gamma$    & Total Dice   & Total
 ..  & ..  & --  & ..  & ..  \\
 \hline
 \end{tabular}
+\newline
 \caption{\label{tab:table-name}Comparing different parameters of fully connected CRF model with its resulting total Dice index and Hausdorff distances..}
 \end{table}
 The best scores of each segmentation are shown in the boxplots in figure 1 and 2. In Figure 1, the Hausdorff distances are plotted. In Figure 2, the Dice index is shown. \newline
@@ -701,10 +697,11 @@ Figure 3 shows a graphical comparison between no postprocessing and using fully 
 
 
 \section{Discussion}
-Discussion goes here where pro and contra of each approach are explained 
-\section{Conclusion}
-The conclusion goes here, where our favorite approach is mentioned and the arguments which lead us to this conclusion.
 
+In the last boxplot xy becomes clear our improvement in comparison to the segmentation without post-processing. The probabilistic keyhole filling method did show a significant improvement compared to the images without post-processing and even to the ground truth. The second method implemented shows an even higher significant improvement. This additional improvement was expected since the Dense CRF contains a probabilistic keyhole filling using a Gaussian approximation. In image xy the impact of the appearance kernel can be seen in comparison to keyhole filling method only. The edges appears to be clearer, which the method keyhole filling could not achieve. 
+\section{Conclusion}
+Our second implemented post-processing method resulted in significant better results compared to our other approaches measured in Dice Indes and Hausdorff Distances. However the computational effort using Dense CRF is significantly higher compared to the probabilistic keyhole filling method. A disadvantage of the probabilistic keyhole filling, which is clearly visible in figure xy is the rough edges. This is a clear advantage of the dense CRF. 
+To improve the probabilistic keyhole filling a smaller voxel threshold could be defined in order to not just fill the keyholes but also fill small gapes on the edges. This could result in a great compromise between quality and speed of the segmentation. 
 
 
 
@@ -772,7 +769,7 @@ The authors would like to thank...
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
 
-\nocite{*}
+%\nocite{*}
 \bibliographystyle{IEEEtran}
 \bibliography{library}
 %\ibitem{IEEEhowto:kopka}
