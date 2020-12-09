@@ -46,17 +46,25 @@ class ImagePostProcessing(pymia_fltr.Filter):
 
 class DenseCRFParams(pymia_fltr.FilterParams):
     """Dense CRF parameters."""
-    def __init__(self, img_t1: sitk.Image, img_t2: sitk.Image, img_proba: sitk.Image):
+    def __init__(self, img_t1: sitk.Image, img_t2: sitk.Image, img_proba: sitk.Image,
+                 gauss_dims: float, bil_dims: float, schan: float):
         """Initializes a new instance of the DenseCRFParams
 
         Args:
             img_t1 (sitk.Image): The T1-weighted image.
             img_t2 (sitk.Image): The T2-weigthed image.
             img_proba (sitk.Image): The posterior probability image.
+
+
         """
         self.img_t1 = img_t1
         self.img_t2 = img_t2
         self.img_proba = img_proba
+
+        # todo add params for gridsearch
+        self.gauss_dims = gauss_dims
+        self.bil_dims = bil_dims
+        self.schan = schan
 
 
 class DenseCRF(pymia_fltr.Filter):
@@ -84,6 +92,15 @@ class DenseCRF(pymia_fltr.Filter):
         if params is None:
             raise ValueError('Parameters are required')
 
+        # todo get params for gridsearch
+        gauss_dims = np.zeros(3)
+        bil_dims = np.zeros(3)
+        schan = np.zeros(2)
+
+        gauss_dims[:] = params.gauss_dims
+        bil_dims[:] = params.bil_dims
+        schan[:] = params.schan
+
         img_t2 = sitk.GetArrayFromImage(params.img_t1)
         img_ir = sitk.GetArrayFromImage(params.img_t2)
         img_proba = sitk.GetArrayFromImage(params.img_proba)
@@ -109,17 +126,17 @@ class DenseCRF(pymia_fltr.Filter):
 
         # add location only
         # TODO: da pariwise_gaussian chönnt mer au zum laufe bringe, (im video werden beid verwenden)
-        pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5, .5, .5), shape=(x, y, z))
+        pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=gauss_dims, shape=(x, y, z))
         #pairwise_gaussian = crf_util.create_pairwise_gaussian(sdims=(.5, .5, .5), shape=img_proba.shape[:3])
 
-        d.addPairwiseEnergy(pairwise_gaussian, compat=.3,
+        d.addPairwiseEnergy(pairwise_gaussian, compat=3,
                             kernel=crf.DIAG_KERNEL,
                             normalization=crf.NORMALIZE_SYMMETRIC)
 
 
         # higher weight equals stronger
         # TODO: sdim chammer da versueche apasse, evlt au die andere parameter wonni noni kenne
-        pairwise_energy = crf_util.create_pairwise_bilateral(sdims=(1, 1, 1), schan=(1, 1), img=stack, chdim=3)
+        pairwise_energy = crf_util.create_pairwise_bilateral(sdims=bil_dims, schan=schan, img=stack, chdim=3)
 
 
         # `compat` (Compatibility) is the "strength" of this potential.

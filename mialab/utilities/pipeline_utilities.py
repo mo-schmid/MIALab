@@ -279,7 +279,9 @@ def post_process(img: structure.BrainImage, segmentation: sitk.Image, probabilit
         pipeline.add_filter(fltr_postp.DenseCRF())
         pipeline.set_param(fltr_postp.DenseCRFParams(img.images[structure.BrainImageTypes.T1w],
                                                      img.images[structure.BrainImageTypes.T2w],
-                                                     probability), len(pipeline.filters) - 1)
+                                                     probability, gauss_dims=kwargs.get('gauss_dims', (1.0, 1.0, 1.0)),
+                                                     bil_dims=kwargs.get('bil_dims', (1.0, 1.0, 1.0)),
+                                                     schan=kwargs.get('schan', (1.0, 1.0))), len(pipeline.filters) - 1)
 
     return pipeline.execute(segmentation)
 

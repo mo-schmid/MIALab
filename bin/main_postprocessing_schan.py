@@ -174,7 +174,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
 
     gauss_dims = gauss_temp.transpose()'''
 
-    gauss_dims = np.arange(1.0, 100.0, 2.0)
+    gauss_dims = np.arange(1.0, 2.0)
 
     # bilateral parameters
     '''bil_temp = np.zeros((3, 10))    # only change n to get more parameters for testing
@@ -192,7 +192,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         schan_temp[:i] = schan_array
 
     schan = schan_temp.transpose()'''
-    schan = np.arange(1.0, 2.0)
+    schan = np.arange(1.0, 100.0, 2.0)
 
     for g_d in gauss_dims:
         for b_d in bil_dims:
