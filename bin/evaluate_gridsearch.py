@@ -7,7 +7,7 @@ import pandas as pd
 from pathlib import Path
 
 
-def main(result_dir: str, plot_dir: str):
+def main(result_dir: str):
 
     # get absolut path of the result directory
     result_dir = Path(Path.cwd() / result_dir)
@@ -32,13 +32,14 @@ def main(result_dir: str, plot_dir: str):
 
 
 
-    group_DICE = dfs[dfs.STATISTIC == 'MEAN'][dfs.METRIC == 'DICE'].groupby(['tree_estimator', 'max_depth'])['VALUE'].mean()
+    group_DICE = dfs[dfs.STATISTIC == 'MEAN'][dfs.METRIC == 'DICE'].groupby(list(parameter.keys()))[
+        'VALUE'].mean()
     group_DICE = group_DICE.sort_values(ascending=False)
     group_DICE = pd.DataFrame(group_DICE)
     group_DICE.insert(group_DICE.shape[1], 'RANK_DICE', np.arange(group_DICE.shape[0]))
 
 
-    group_HDRFDST = dfs[dfs.STATISTIC == 'MEAN'][dfs.METRIC == 'HDRFDST'].groupby(['tree_estimator', 'max_depth'])['VALUE'].mean()
+    group_HDRFDST = dfs[dfs.STATISTIC == 'MEAN'][dfs.METRIC == 'HDRFDST'].groupby(list(parameter.keys()))['VALUE'].mean()
     group_HDRFDST  = group_HDRFDST.sort_values(ascending=True)
     group_HDRFDST = pd.DataFrame(group_HDRFDST)
     group_HDRFDST.insert(group_HDRFDST.shape[1], 'RANK_HDRFDST', np.arange(group_HDRFDST.shape[0]))
@@ -48,10 +49,9 @@ def main(result_dir: str, plot_dir: str):
     combined['MEAN_RANK'] = combined[['RANK_DICE', 'RANK_HDRFDST']].mean(axis=1)
     combined = combined.sort_values(by='MEAN_RANK', ascending=True)
 
-    n_estimator = combined.iloc[0].name[0]
-    max_depth = combined.iloc[0].name[1]
-    print(f"Best parameter set: n_estimator = {n_estimator},  max_depth = {max_depth}")
-
+    print("Best parameters")
+    for i, string in enumerate(combined.iloc[0].name):
+        print(f"{list(parameter.keys())[i]} : {string}")
 
 
 
@@ -67,10 +67,18 @@ if __name__ == '__main__':
     """
     parser = argparse.ArgumentParser(description='Result plotting.')
 
+    # parser.add_argument(
+    #     '--result_dir',
+    #     type=str,
+    #     default='./mia-result/2020-11-23-13-51-20',
+    #     help='Path to the result dir.'
+    # )
+
+    # result folder of gridsearch of random forest
     parser.add_argument(
         '--result_dir',
         type=str,
-        default='./mia-result/gridsearch_randomForest/combined_results/',
+        default='./mia-result/gridsearch_randomForest/combined_results',
         help='Path to the result dir.'
     )
 
@@ -82,4 +90,4 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    main(args.result_dir, args.plot_dir)
+    main(args.result_dir,)
