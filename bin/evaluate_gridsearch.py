@@ -78,7 +78,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--result_dir',
         type=str,
-        default='./mia-result/gridsearch_randomForest/combined_results',
+        default='./mia-result/Ubelix/bil_dims',
         help='Path to the result dir.'
     )
 
@@ -90,4 +90,4 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    main(args.result_dir,)
+    main(args.result_dir)
