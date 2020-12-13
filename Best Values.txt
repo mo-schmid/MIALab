@@ -1,0 +1,13 @@
+(1-81)
+Best parameters	
+crf_post : True
+gauss_dims : 41.0
+bil_dims : 21.0
+schan : 21.0
+
+(g: 42-52, bil: 8-18, schan: 22)
+Best parameters
+crf_post : True
+gauss_dims : 52.0
+bil_dims : 16.0
+schan : 22.0

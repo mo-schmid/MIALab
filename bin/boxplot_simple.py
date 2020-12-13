@@ -5,30 +5,14 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
-from pathlib import Path
-
-
-class ResultParam():
-    """Result Parameter"""
-    def __init__(self, path: Path, param_str: str):
-        """Initializes a new instance of the Result Parameter
-
-        Args:
-            path (Path): path to the desired result file
-            param_str (str): string containing the parameters used in the postprocessing
-
-        """
-        self.path = path
-        self.param_str = param_str
-
 
 
 def set_box_format(bp, color):
     plt.setp(bp['boxes'], color=color)
     plt.setp(bp['whiskers'], color=color)
     plt.setp(bp['caps'], color=color)
-    plt.setp(bp['caps'], linewidth=1)
-    plt.setp(bp['medians'], color='cornflowerblue')
+    plt.setp(bp['caps'], linewidth=0)
+    plt.setp(bp['medians'], color=color)
     plt.setp(bp['medians'], linewidth=1.5)
     plt.setp(bp['fliers'], marker='.')
     plt.setp(bp['fliers'], markerfacecolor='black')
@@ -41,8 +25,7 @@ def boxplot(file_path: str, data: list, title: str, x_label: str, y_label: str, 
         raise ValueError('arguments data and x_ticks need to have same length')
 
     fig = plt.figure(
-        figsize=( 10 *1.5, 8*1.5))  # figsize defaults to (width, height) =(6.4, 4.8),
-
+        figsize=(4.8*1.5, 6.4 *1.5))  # figsize defaults to (width, height) =(6.4, 4.8),
     # for boxplots, we want the ratio to be inversed
     ax = fig.add_subplot(111)  # create an axes instance (nrows=ncols=index)
     bp = ax.boxplot(data, widths=0.6)
@@ -53,8 +36,7 @@ def boxplot(file_path: str, data: list, title: str, x_label: str, y_label: str, 
     ax.set_ylabel(y_label, fontweight='bold', fontsize=12)
     # ax.set_xlabel(x_label, fontweight='bold', fontsize=9.5)  # we don't use the x-label since it should be clear from the x-ticks
     ax.yaxis.set_tick_params(labelsize=12)
-    ax.set_xticklabels(x_ticks, fontdict={'fontsize': 12, 'fontweight': 'bold'}, rotation=45)
-
+    ax.set_xticklabels(x_ticks, fontdict={'fontsize': 12, 'fontweight': 'bold'})
 
     # remove frame
     ax.spines['top'].set_visible(False)
@@ -70,7 +52,7 @@ def boxplot(file_path: str, data: list, title: str, x_label: str, y_label: str, 
         max_ = max_ if max_ is not None and max_ > max_original else max_original
         ax.set_ylim(min_, max_)
 
-    plt.savefig(file_path, bbox_inches="tight")
+    plt.savefig(file_path)
     plt.close()
 
 
@@ -87,45 +69,59 @@ def metric_to_readable_text(metric: str):
         raise ValueError('Metric "{}" unknown'.format(metric))
 
 
-def main(results: [ResultParam], plot_dir: Path):
+def main(csv_files: str, plot_dir: str):
     metrics = ('DICE', 'HDRFDST')  # the metrics we want to plot the results for
     metrics_yaxis_limits = ((0.0, 1.0), (0.0, None))  # tuples of y-axis limits (min, max) for each metric. Use None if unknown
-    labels = ('WhiteMatter','GreyMatter', 'Hippocampus','Amygdala''Thalamus')  # the brain structures/tissues you are interested in
-
+    labels = ('WhiteMatter', 'Amygdala', 'GreyMatter', 'Hippocampus', 'Thalamus')  # the brain structures/tissues you are interested in
 
     # load the CSVs. We usually want to compare different methods (e.g. a set of different features), therefore,
     # we load two CSV (for simplicity, it is the same here)
     # todo: adapt to your needs to compare different methods (e.g. load different CSVs)
-    dfs = []
-    methods = []
-    for res in results:
-        dfs.append(pd.read_csv(res.path, sep=';'))
-        methods.append(res.param_str)
-
-    # todo: read parameter values from text file, use them to plot the information about the paramter
-
+    df_method1 = pd.read_csv(csv_files[0], sep=';')
+    df_method2 = pd.read_csv(csv_files[1], sep=';')
+    df_method3 = pd.read_csv(csv_files[2], sep=';')
+    df_method4 = pd.read_csv(csv_files[3], sep=';')
+    df_method5 = pd.read_csv(csv_files[4], sep=';')
+    dfs = [df_method1, df_method2, df_method3, df_method4, df_method5]
 
     # some parameters to improve the plot's readability
-    title = 'Comparison of the parameters for the PKF function on {}'
+    methods = ('None', 'Z-Score', 'WS', 'Hist. Match.', 'FCM')
+    title = 'Evaluation of different normalizing methods on {}'
 
     for label in labels:
         for metric, (min_, max_) in zip(metrics, metrics_yaxis_limits):
-            boxplot(os.path.join(plot_dir, '{}_{}.png'.format(label, metric)),
+            boxplot(os.path.join(plot_dir, 'Boxplot_{}_{}.png'.format(label, metric)),
                     [format_data(df, label, metric) for df in dfs],
                     title.format(label),
                     'Method', metric_to_readable_text(metric),
                     methods,
-                    min_, max_
-                    )
+                    min_, max_)
 
 
 if __name__ == '__main__':
+    """The program's entry point.
 
-    results = []
+    Parse the arguments and run the program.
+    """
+    parser = argparse.ArgumentParser(description='Result plotting.')
 
-    results.append(ResultParam(Path(Path.cwd() / "mia-result/Best_Values/PP-GD-BD-S-119.0/results.csv"),
-                               "Gauss = 52,\n Bilateral = 16, \n Schan = 22"))
+    parser.add_argument(
+        '--csv_files',
+        type=list,
+        default=['mia-result/no-results.csv',
+                 'mia-result/z-results.csv',
+                 'mia-result/ws-results.csv',
+                 'mia-result/hm-results.csv',
+                 'mia-result/fcm-results.csv'],
+        help='Path to the result CSV file.'
+    )
 
+    parser.add_argument(
+        '--plot_dir',
+        type=str,
+        default='mia-result/plots',
+        help='Path to the plot directory.'
+    )
 
-
-    main(results, Path(Path.cwd() / 'mia-result/plot_results'))
+    args = parser.parse_args()
+    main(args.csv_files, args.plot_dir)

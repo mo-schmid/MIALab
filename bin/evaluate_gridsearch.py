@@ -78,7 +78,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--result_dir',
         type=str,
-        default='./mia-result/Ubelix/bil_dims',
+        default='./mia-result/Ubelix/all_values_final',
         help='Path to the result dir.'
     )
 

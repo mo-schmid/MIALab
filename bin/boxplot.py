@@ -13,7 +13,7 @@ def main():
     # but you will need to install it first ('pip install pandas') and import it to this file ('import pandas as pd')
     # pass is just a placeholder if there is no other code
 
-    os.chdir('mia-result/')
+    os.chdir('mia-result/Ubelix/gauss_dims')
     result_path = glob.glob('*/results.csv')[0]
     print(result_path)
     #seg_path = glob.glob('*/117122_SEG-PP.mha')[0]
