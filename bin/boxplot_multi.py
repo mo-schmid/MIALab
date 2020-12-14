@@ -19,16 +19,16 @@ def main(csv_files: str, plot_dir: str):
     # we load two CSV (for simplicity, it is the same here)
     df_method1 = pd.read_csv(csv_files[0], sep=';')
     df_method2 = pd.read_csv(csv_files[1], sep=';')
-    df_method3 = pd.read_csv(csv_files[2], sep=';')
-    df_method4 = pd.read_csv(csv_files[3], sep=';')
-    df_method5 = pd.read_csv(csv_files[4], sep=';')
-    dfs = [df_method1, df_method2, df_method3, df_method4, df_method5]
+    #df_method3 = pd.read_csv(csv_files[2], sep=';')
+    #df_method4 = pd.read_csv(csv_files[3], sep=';')
+    #df_method5 = pd.read_csv(csv_files[4], sep=';')
+    dfs = [df_method1, df_method2]  #, df_method3, df_method4, df_method5
     # since post-processing is not implemented, delete PP-results:
     for i in range(int(len(dfs))):
         dfs[i] = dfs[i][0:int(len(dfs[i])/2)]
 
     # normalization methods
-    methods = ('None', 'Z-Score', 'White Stripe', 'Hist. Match.', 'FCM')
+    methods = ('No PP', 'With PP')
 
     all_list = []  # dim 0: labels, dim 1: methods
     for label in labels:
@@ -75,11 +75,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--csv_files',
         type=list,
-        default=['mia-result/no-results.csv',
-                 'mia-result/z-results.csv',
-                 'mia-result/ws-results.csv',
-                 'mia-result/hm-results.csv',
-                 'mia-result/fcm-results.csv'],
+        default=['mia-result/Best_Values/no_PP_best/results.csv',
+                 'mia-result/Best_Values/with_PP_best/results.csv'],
         help='Path to the result CSV file.'
     )
 

@@ -28,7 +28,7 @@ def set_box_format(bp, color):
     plt.setp(bp['whiskers'], color=color)
     plt.setp(bp['caps'], color=color)
     plt.setp(bp['caps'], linewidth=1)
-    plt.setp(bp['medians'], color='cornflowerblue')
+    plt.setp(bp['medians'], color='red')
     plt.setp(bp['medians'], linewidth=1.5)
     plt.setp(bp['fliers'], marker='.')
     plt.setp(bp['fliers'], markerfacecolor='black')
@@ -41,7 +41,7 @@ def boxplot(file_path: str, data: list, title: str, x_label: str, y_label: str, 
         raise ValueError('arguments data and x_ticks need to have same length')
 
     fig = plt.figure(
-        figsize=( 10 *1.5, 8*1.5))  # figsize defaults to (width, height) =(6.4, 4.8),
+        figsize=(2*1.5, 5*1.5))  # figsize defaults to (width, height) =(6.4, 4.8),
 
     # for boxplots, we want the ratio to be inversed
     ax = fig.add_subplot(111)  # create an axes instance (nrows=ncols=index)
@@ -49,11 +49,11 @@ def boxplot(file_path: str, data: list, title: str, x_label: str, y_label: str, 
     set_box_format(bp, '000')
 
     # set and format litle, labels, and ticks
-    ax.set_title(title, fontweight='bold', fontsize=12)
-    ax.set_ylabel(y_label, fontweight='bold', fontsize=12)
+    ax.set_title(title, fontweight='bold', fontsize=20)
+    ax.set_ylabel(y_label, fontweight='bold', fontsize=18)
     # ax.set_xlabel(x_label, fontweight='bold', fontsize=9.5)  # we don't use the x-label since it should be clear from the x-ticks
-    ax.yaxis.set_tick_params(labelsize=12)
-    ax.set_xticklabels(x_ticks, fontdict={'fontsize': 12, 'fontweight': 'bold'}, rotation=45)
+    ax.yaxis.set_tick_params(labelsize=18)
+    ax.set_xticklabels(x_ticks, fontdict={'fontsize': 18, 'fontweight': 'bold'}, rotation=45)
 
 
     # remove frame
@@ -89,8 +89,8 @@ def metric_to_readable_text(metric: str):
 
 def main(results: [ResultParam], plot_dir: Path):
     metrics = ('DICE', 'HDRFDST')  # the metrics we want to plot the results for
-    metrics_yaxis_limits = ((0.0, 1.0), (0.0, None))  # tuples of y-axis limits (min, max) for each metric. Use None if unknown
-    labels = ('WhiteMatter','GreyMatter', 'Hippocampus','Amygdala''Thalamus')  # the brain structures/tissues you are interested in
+    metrics_yaxis_limits = ((0.0, 1.0), (0.0, 18.0))  # tuples of y-axis limits (min, max) for each metric. Use None if unknown
+    labels = ('WhiteMatter','GreyMatter', 'Hippocampus','Amygdala','Thalamus')  # the brain structures/tissues you are interested in
 
 
     # load the CSVs. We usually want to compare different methods (e.g. a set of different features), therefore,
@@ -106,7 +106,7 @@ def main(results: [ResultParam], plot_dir: Path):
 
 
     # some parameters to improve the plot's readability
-    title = 'Comparison of the parameters for the PKF function on {}'
+    title = '{}'
 
     for label in labels:
         for metric, (min_, max_) in zip(metrics, metrics_yaxis_limits):
@@ -123,8 +123,10 @@ if __name__ == '__main__':
 
     results = []
 
-    results.append(ResultParam(Path(Path.cwd() / "mia-result/Best_Values/PP-GD-BD-S-119.0/results.csv"),
-                               "Gauss = 52,\n Bilateral = 16, \n Schan = 22"))
+    results.append(ResultParam(Path(Path.cwd() / "mia-result/Best_Values/no_PP_best/results.csv"),
+                               "no pp"))
+    results.append(ResultParam(Path(Path.cwd() / "mia-result/Best_Values/with_PP_best/results.csv"),
+                               "with pp"))
 
 
 
