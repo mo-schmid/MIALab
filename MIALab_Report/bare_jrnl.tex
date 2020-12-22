@@ -601,13 +601,9 @@ In this paper we aim to improve the post-processing of the segmentation. Probabi
 Detailed Outline:
 
 \subsection{Data}
-%\begin{itemize}[\IEEEsetlabelwidth{$\gamma$}]
-The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set.
-The Project data set contains 3 tesla MRI T1 and T2-weighted images with segmentations as ground truth. The data set containing skull are defaced to assure complete anonymous data set.
-%\item{30 unrelated healthy subjects from the Human Connectome Project data set}
-%\item{3 tesla MR T1- and T2-weighted images with ground truth}
-%\item{Images with skull are defaced for anonymization}
-%\end{itemize}
+
+The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set. The data set contains images of a three Tesla MRI T1 and T2-weighted with segmentation as ground truth. The data set is defaced in order to make it  completely anonymous.
+
 \subsection{Methods}
 \begin{figure}[h!]
 \centering
@@ -636,14 +632,13 @@ The predicted masks with the segmentation have some obvious mistakes, e.g., keyh
 In this section we explain the basic concept and the procedure of the Probabilistic Keyhole filling (PKF). The Goal of the PFK is to incorporate prior knowledge into the post-processing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
 This means that within the local neighbourhood (26-connected) of one voxel, all voxels should carry the same label (unless it is a boundary voxel).
 \textbf{Approach II: Dense Conditional Random Field (DCRF)}\newline
-The DCRF model was first published by Philipp Krähenbühl and Vladlen Koltun in NIPS 2011 \cite{Krahenbuhl2012}. In Krähenbühl’s and Koltun’s paper the exact derivation of the model can be seen. For this paper the parameter appearance kernel and smoothness were adjusted to achieve the best results .
-The appearance kernel takes into account that nearby pixels with similar colours are most probable in the same segmentation label. The smoothness kernel removes small keyholes. The following equation \ref{eq:1}, shows the influence of the adjustable parameter/weights to the two-kernel potential:\newline
+The DCRF model was first published by Philipp Krahenb¨uhl¨ and Vladlen Koltun in NIPS 2011 \cite{Krahenbuhl2012}. In Krähenbühl’s and Koltun’s paper, the exact derivation of the model can be seen. For this paper, the parameter appearance kernel and smoothness were adjusted to achieve the best results . The appearance kernel takes nearby pixels with similar colours into account, which are most probable in the same segmentation label. The smoothness kernel removes small keyholes. The following equation 1  \ref{eq:1} shows the influence of the adjustable parameter and weights of the two-kernel potential:\newline
 \begin{multline}\label{eq:1}
     k\left(f_i,f_j\right)=\\
 \omega^{\left(1\right)}  exp\left(-\frac{\left| p_i - p_j\right|^2}{2\theta^2_\alpha}-\frac{\left| I_i-I_j\right|^2}{2\theta^2_\beta}\right)\\+\omega^{\left(2\right)}   exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta^2_\gamma}\right)
 \end{multline}
 
-$\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are weights of the equation an were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
+$\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are the weights of the equation an were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
 
 
 %*Goal: incorporate prior knowledge (connected structure and spatial coherence)\newline
@@ -698,10 +693,9 @@ Figure 3 shows a graphical comparison between no postprocessing and using fully 
 
 \section{Discussion}
 
-In the last boxplot xy becomes clear our improvement in comparison to the segmentation without post-processing. The probabilistic keyhole filling method did show a significant improvement compared to the images without post-processing and even to the ground truth. The second method implemented shows an even higher significant improvement. This additional improvement was expected since the Dense CRF contains a probabilistic keyhole filling using a Gaussian approximation. In image xy the impact of the appearance kernel can be seen in comparison to keyhole filling method only. The edges appears to be clearer, which the method keyhole filling could not achieve. 
+In the last boxplot, xy our improvement in comparison to the segmentation without postprocessing comes forward. The probabilistic keyhole filling method did shows a significant improvement compared to the images without postprocessing and even to the ground truth. The second method implemented shows an even  better significant improvement (xy instead of xx). This additional improvement was expected, because the DCRF contains a probabilistic keyhole filling using a Gaussian approximation. In image xy, the impact of the appearance kernel can be seen in comparison to only the keyhole filling method. The edges appear to be clearer, which the method keyhole filling could not achieve.
 \section{Conclusion}
-Our second implemented post-processing method resulted in significant better results compared to our other approaches measured in Dice Indes and Hausdorff Distances. However the computational effort using Dense CRF is significantly higher compared to the probabilistic keyhole filling method. A disadvantage of the probabilistic keyhole filling, which is clearly visible in figure xy is the rough edges. This is a clear advantage of the dense CRF. 
-To improve the probabilistic keyhole filling a smaller voxel threshold could be defined in order to not just fill the keyholes but also fill small gapes on the edges. This could result in a great compromise between quality and speed of the segmentation. 
+Our second postprocessing method resulted in significantly better results in comparison to our other approaches measured in Dice Index and Hausdorff Distances. However, the computational effort using DCRF is significantly higher in comparison to the probabilistic keyhole filling method. A disadvantage of the probabilistic keyhole filling, which is clearly visible in figure xy, is the rough edges. This is a clear advantage of the DCRF. To improve the probabilistic keyhole filling, a smaller voxel threshold could be defined in order to not just fill the keyholes but also fill small gaps on the edges. This could result in a sufficient compromise between quality and speed of the segmentation.
 
 
 
