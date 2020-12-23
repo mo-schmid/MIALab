@@ -12,12 +12,13 @@ import pingouin as pg
 from pathlib import Path
 
 
-def main(result_dir_ref: str, result_dir_pp: str):
+def main(result_dir_ref: str, result_dir_pp: str, plot_dir: str):
 
 
     # get absolut path of the result directory
     result_dir_ref = Path(Path.cwd() / result_dir_ref)
     result_dir_pp = Path(Path.cwd() / result_dir_pp)
+    plot_dir = Path(Path.cwd() / plot_dir)
 
     # load the data into pandas
     ref = pd.read_csv(Path(result_dir_ref / 'results.csv'), sep=';')
@@ -37,16 +38,18 @@ def main(result_dir_ref: str, result_dir_pp: str):
 
         #create a subfigure per label wit the two qq plots
         # fig, ax = plt.subplots(2, 2, sharey=True, sharex=True)
-        fig, ax = plt.subplots(2, 2, figsize=(8, 8), sharey=True, sharex=True)
+        fig, ax = plt.subplots(2, 3, figsize=(12, 8), sharey=True, sharex=True)
         fig.suptitle(f"Q-Q plots of {label}")
 
         # create q-q plot DICE
         pg.qqplot(ref['DICE'][ref.LABEL == label], ax=ax[0, 0])
         ax[0, 0].set_title(f"Dice coefficient before post-processing")
 
-
         pg.qqplot(pp['DICE'][pp.LABEL == label], ax=ax[0, 1])
         ax[0, 1].set_title(f"Dice coefficient after post-processing")
+
+        pg.qqplot(pp['DICE'][pp.LABEL == label] - ref['DICE'][ref.LABEL == label], ax=ax[0, 2])
+        ax[0, 2].set_title(f"Difference in Dice coefficient")
 
         # create q-q plot HDRFDST
         pg.qqplot(ref['HDRFDST'][ref.LABEL == label], ax=ax[1, 0])
@@ -55,10 +58,15 @@ def main(result_dir_ref: str, result_dir_pp: str):
         pg.qqplot(pp['HDRFDST'][pp.LABEL == label], ax=ax[1, 1])
         ax[1, 1].set_title(f"Hausdorff distance after post-processing")
 
+        pg.qqplot(pp['HDRFDST'][pp.LABEL == label] - ref['HDRFDST'][ref.LABEL == label], ax=ax[1, 2])
+        ax[1, 2].set_title(f"Difference in Hausdorff distance")
+
         # modify appearance of plot
         plt.subplots_adjust( hspace = 0.5, wspace = 0.5)
 
         for axis in ax.flatten():
+            axis.set_xlim([-1.6, 1.6])
+            axis.set_ylim([-1.6, 1.6])
             axis.texts = []
             lines = axis.get_lines()
             lines[0].set_color('black')
@@ -70,6 +78,9 @@ def main(result_dir_ref: str, result_dir_pp: str):
             lines[3].set_color('grey')
             lines[4].set_color('grey')
 
+        plt.savefig(Path(plot_dir/ label))
+        plt.close()
+
     # plt.show()
 
 
@@ -77,11 +88,15 @@ def main(result_dir_ref: str, result_dir_pp: str):
 
 
     # conduct t-test
-    stat_test = pd.DataFrame(columns=['LABEL','mean_diff_DICE','p_DICE','mean_diff_HDRFDST','p_HDRFDST'])
+    stat_test = pd.DataFrame(columns=['LABEL','mean_diff_DICE','p_DICE','CI95_DICE','mean_diff_HDRFDST','p_HDRFDST'])
 
     for label in data['LABEL'].unique():
         # statistical test of Dice coefficient
-        t_DICE, p_DICE = stats.ttest_rel(ref['DICE'][ref.LABEL == label], pp['DICE'][pp.LABEL == label])
+        # t_DICE, p_DICE = stats.ttest_rel(ref['DICE'][ref.LABEL == label], pp['DICE'][pp.LABEL == label])
+        st = pg.ttest(ref['DICE'][ref.LABEL == label], pp['DICE'][pp.LABEL == label], paired=True)
+        t_DICE = st.iloc[0]['T']
+        p_DICE = st.iloc[0]['p-val']
+
 
         mean_DICE = np.mean(pp['DICE'][pp.LABEL == label] - ref['DICE'][ref.LABEL == label])
         mean_HDRFDST = np.mean(pp['HDRFDST'][pp.LABEL == label] - ref['HDRFDST'][ref.LABEL == label])
@@ -90,7 +105,9 @@ def main(result_dir_ref: str, result_dir_pp: str):
         # t_HDRFDST, p_HDRFDST = stats.ttest_rel(ref['HDRFDST'][ref.LABEL == label], pp['HDRFDST'][pp.LABEL == label])
         t_HDRFDST, p_HDRFDST = stats.wilcoxon(ref['HDRFDST'][ref.LABEL == label], pp['HDRFDST'][pp.LABEL == label])
 
-        stat_test = stat_test.append({'LABEL': label,'mean_diff_DICE':mean_DICE, 'p_DICE': p_DICE, 'mean_diff_HDRFDST':mean_HDRFDST,  'p_HDRFDST': p_HDRFDST}, ignore_index=True)
+        stat_test = stat_test.append({'LABEL': label,'mean_diff_DICE':mean_DICE, 'p_DICE': p_DICE,'CI95_DICE':st.iloc[0]['CI95%'],
+                                      'mean_diff_HDRFDST':mean_HDRFDST,  'p_HDRFDST': p_HDRFDST}, ignore_index=True)
+
 
     print(stat_test)
     print('end main')
@@ -107,17 +124,25 @@ if __name__ == '__main__':
     parser.add_argument(
         '--result_dir_ref',
         type=str,
-        default='./mia-result/gridsearch_PKF/2020-12-09-16-16-10/no_PP/',
+        default='./mia-result/gridsearch_PKF/2020-12-11-09-51-54/no_PP/',
         help='Path to the result dir without post-processing.'
     )
 
     parser.add_argument(
         '--result_dir_pp',
         type=str,
-        default='./mia-result/gridsearch_PKF/2020-12-09-16-16-10/with_PP/PP-V-6_0-BG-True/',
+        default='./mia-result/gridsearch_PKF/2020-12-11-09-51-54/with_PP/PP-V-20_0-BG-True/',
         help='Path to the result dir with post-processing.'
     )
 
+    parser.add_argument(
+        '--plot_dir',
+        type=str,
+        default='./mia-result/plot_results/QQ_plots/',
+        help='Path to the plot directory.'
+    )
+
+
 
     args = parser.parse_args()
-    main(args.result_dir_ref, args.result_dir_pp)
+    main(args.result_dir_ref, args.result_dir_pp, args.plot_dir)
