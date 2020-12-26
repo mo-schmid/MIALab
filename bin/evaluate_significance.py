@@ -107,14 +107,14 @@ if __name__ == '__main__':
     parser.add_argument(
         '--result_dir_ref',
         type=str,
-        default='./mia-result/gridsearch_PKF/2020-12-09-16-16-10/no_PP/',
+        default='./mia-result/Best_Values/no_PP_best/',
         help='Path to the result dir without post-processing.'
     )
 
     parser.add_argument(
         '--result_dir_pp',
         type=str,
-        default='./mia-result/gridsearch_PKF/2020-12-09-16-16-10/with_PP/PP-V-6_0-BG-True/',
+        default='./mia-result/Best_Values/with_PP_best/',
         help='Path to the result dir with post-processing.'
     )
 

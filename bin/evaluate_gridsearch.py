@@ -78,7 +78,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--result_dir',
         type=str,
-        default='./mia-result/Ubelix/vortrag_values',
+        default='./mia-result/Ubelix/After_Prezi_Values',
         help='Path to the result dir.'
     )
 

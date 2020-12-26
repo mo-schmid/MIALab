@@ -121,7 +121,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
 
     # initialize evaluator
     # create a result directory with timestamp
-    t = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    t = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S-Search1')
     result_dir = os.path.join(result_dir, t)
     os.makedirs(result_dir, exist_ok=True)
 
@@ -174,7 +174,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
 
     gauss_dims = gauss_temp.transpose()'''
 
-    gauss_dims = np.arange(1.0, 101.0, 20.0)
+    gauss_dims = np.arange(1.0, 3.0, 1.0)
 
     # bilateral parameters
     '''bil_temp = np.zeros((3, 10))    # only change n to get more parameters for testing
@@ -183,7 +183,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         bil_temp[:i] = bil
 
     bil_dims = bil_temp.transpose()'''
-    bil_dims = np.arange(1.0, 101.0, 20.0)
+    bil_dims = np.arange(1.0, 14.0, 2.0)
 
     # schan parameters
     '''schan_temp = np.zeros((2, 10))      # only change n to get more parameters for testing
@@ -192,7 +192,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         schan_temp[:i] = schan_array
 
     schan = schan_temp.transpose()'''
-    schan = np.arange(1.0, 101.0, 20.0)
+    schan = np.arange(1.0, 14.0, 2.0)
 
     for g_d in gauss_dims:
         for b_d in bil_dims:
@@ -202,13 +202,16 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
                                                 'bil_dims': b_d,
                                                 'schan' : sn})
 
-    gridsearch = 1.0 # for easier evaluation
+    #gridsearch = 1.0 # for easier evaluation
 
     #post_process_params = {'crf_post': True}
     for post_process_params in post_process_param_list:
 
-        name = 'PP-GD-BD-S-' + str(gridsearch)
-        gridsearch = gridsearch + 1
+        name = 'PP-GD-' + str(post_process_params.get('gauss_dims')).replace('.','_') +\
+               '-BD-' + str(post_process_params.get('bil_dims')).replace('.','_') +\
+               '-S-' + str(post_process_params.get('schan')).replace('.','_')
+
+        #gridsearch = gridsearch + 1
 
         sub_dir = os.path.join(result_dir, name)
         os.makedirs(sub_dir, exist_ok=True)
