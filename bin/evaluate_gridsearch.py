@@ -57,9 +57,6 @@ def main(result_dir: str):
 
 
 
-
-
-
 if __name__ == '__main__':
     """The program's entry point.
 
@@ -74,13 +71,24 @@ if __name__ == '__main__':
     #     help='Path to the result dir.'
     # )
 
-    # result folder of gridsearch of random forest
+    # # result folder of gridsearch of random forest
+    # parser.add_argument(
+    #     '--result_dir',
+    #     type=str,
+    #     default='./mia-result/gridsearch_randomForest/combined_results',
+    #     help='Path to the result dir.'
+    # )
+
+    # result folder of gridsearch of PKF
     parser.add_argument(
         '--result_dir',
         type=str,
-        default='./mia-result/gridsearch_randomForest/combined_results',
+        default='./mia-result/gridsearch_PKF/2020-12-11-09-51-54/with_PP',
         help='Path to the result dir.'
     )
+
+
+
 
     parser.add_argument(
         '--plot_dir',
