@@ -90,8 +90,8 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
 
 
     # set parameter for grid search gridsearch
-    search_tree_estimators = np.array([10, 15, 20, 25])
-    search_tree_max_depth = np.array([10, 12, 14, 16, 18])
+    search_tree_estimators = np.array([10])
+    search_tree_max_depth = np.array([10])
 
     start_time_gridsearch = timeit.default_timer()
 
@@ -173,6 +173,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
             evaluator.clear()
 
     print('Total Time elapsed:', timeit.default_timer() - start_time_gridsearch, 's')
+    return 0
 
 if __name__ == "__main__":
     """The program's entry point."""
