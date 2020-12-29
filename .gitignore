@@ -243,3 +243,5 @@ data/
 *.nii.gz
 *.mha
 exercise/randomforest_plots/
+/bin/results_pp/
+

@@ -9,6 +9,7 @@ import sys
 import timeit
 import warnings
 
+import json
 import SimpleITK as sitk
 import sklearn.ensemble as sk_ensemble
 import numpy as np
@@ -71,8 +72,8 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
 
     #warnings.warn('Random forest parameters not properly set.')
     forest = sk_ensemble.RandomForestClassifier(max_features=images[0].feature_matrix[0].shape[1],
-                                                n_estimators=10,
-                                                max_depth=10)
+                                                n_estimators=20,
+                                                max_depth=85)
 
     start_time = timeit.default_timer()
     forest.fit(data_train, labels_train)
@@ -93,6 +94,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
                                           LOADING_KEYS,
                                           futil.BrainImageFilePathGenerator(),
                                           futil.DataDirectoryFilter())
+
 
     # load images for testing and pre-process
     pre_process_params['training'] = False
@@ -120,36 +122,92 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         images_prediction.append(image_prediction)
         images_probabilities.append(image_probabilities)
 
-    # post-process segmentation and evaluate with post-processing
-    post_process_params = {'simple_post': True}
-    images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
-                                                     post_process_params, multi_process=False)
+
+    # save results without post-processing
+    name = 'no_PP'
+    sub_dir = os.path.join(result_dir, name)
+    os.makedirs(sub_dir, exist_ok=True)
 
     for i, img in enumerate(images_test):
-        evaluator.evaluate(images_post_processed[i], img.images[structure.BrainImageTypes.GroundTruth],
-                           img.id_ + '-PP')
+        sitk.WriteImage(images_prediction[i], os.path.join(sub_dir, images_test[i].id_ + '_SEG.mha'), True)
 
-        # save results
-        sitk.WriteImage(images_prediction[i], os.path.join(result_dir, images_test[i].id_ + '_SEG.mha'), True)
-        sitk.WriteImage(images_post_processed[i], os.path.join(result_dir, images_test[i].id_ + '_SEG-PP.mha'), True)
-
-    # use two writers to report the results
-    os.makedirs(result_dir, exist_ok=True)  # generate result directory, if it does not exists
-    result_file = os.path.join(result_dir, 'results.csv')
+    result_file = os.path.join(sub_dir, 'results.csv')
     writer.CSVWriter(result_file).write(evaluator.results)
 
-    print('\nSubject-wise results...')
-    writer.ConsoleWriter().write(evaluator.results)
-
     # report also mean and standard deviation among all subjects
-    result_summary_file = os.path.join(result_dir, 'results_summary.csv')
+    result_summary_file = os.path.join(sub_dir, 'results_summary.csv')
     functions = {'MEAN': np.mean, 'STD': np.std}
     writer.CSVStatisticsWriter(result_summary_file, functions=functions).write(evaluator.results)
-    print('\nAggregated statistic results...')
-    writer.ConsoleStatisticsWriter(functions=functions).write(evaluator.results)
 
     # clear results such that the evaluator is ready for the next evaluation
     evaluator.clear()
+
+
+
+    # define paramter for grid search
+    post_process_param_list = []
+    variance = np.arange(1, 2)
+    preserve_background = np.asarray([False])
+
+    #
+    # # define paramter for grid search
+    # post_process_param_list = []
+    # variance = np.arange(0.5, 4.0, 0.5)
+    # preserve_background = np.asarray([False, True])
+
+    for bg in preserve_background:
+        for var in variance:
+            post_process_param_list.append({'simple_post': bool(True),
+                                            'variance': float(var),
+                                            'preserve_background': bool(bg)})
+
+
+    # execute post processing with definde parameters
+    for post_process_params in post_process_param_list:
+
+
+        # create sub-directory for results
+        name = 'PP-V-'+ str(post_process_params.get('variance')).replace('.','_') +\
+               '-BG-' + str(post_process_params.get('preserve_background'))
+        sub_dir = os.path.join(result_dir, name)
+        os.makedirs(sub_dir, exist_ok=True)
+
+        #write the used parameter into a text file and store it in the result folder
+        completeName = os.path.join(sub_dir, "parameter.txt")
+        file1 = open(completeName, "w+")
+        json.dump(post_process_params, file1)
+        file1.close()
+
+
+        # post-process segmentation and evaluate with post-processing
+        images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
+                                                     post_process_params, multi_process=False)
+
+
+        for i, img in enumerate(images_test):
+            evaluator.evaluate(images_post_processed[i], img.images[structure.BrainImageTypes.GroundTruth],
+                            img.id_ + '-PP')
+            # save results
+            sitk.WriteImage(images_post_processed[i], os.path.join(sub_dir, images_test[i].id_ + '_SEG-PP.mha'), True)
+
+
+        # save all results in csv file
+        result_file = os.path.join(sub_dir, 'results.csv')
+        writer.CSVWriter(result_file).write(evaluator.results)
+
+        print('\nSubject-wise results...')
+        writer.ConsoleWriter().write(evaluator.results)
+
+        # report also mean and standard deviation among all subjects
+        result_summary_file = os.path.join(sub_dir, 'results_summary.csv')
+        functions = {'MEAN': np.mean, 'STD': np.std}
+        writer.CSVStatisticsWriter(result_summary_file, functions=functions).write(evaluator.results)
+        print('\nAggregated statistic results...')
+        writer.ConsoleStatisticsWriter(functions=functions).write(evaluator.results)
+
+        # clear results such that the evaluator is ready for the next evaluation
+        evaluator.clear()
+
 
 
 if __name__ == "__main__":
@@ -162,7 +220,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--result_dir',
         type=str,
-        default=os.path.normpath(os.path.join(script_dir, './mia-result')),
+        default=os.path.normpath(os.path.join(script_dir, './mia-result/gridsearch_PKF')),
         help='Directory for results.'
     )
 

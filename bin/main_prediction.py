@@ -8,6 +8,7 @@ import os
 import sys
 import timeit
 import warnings
+import pi
 
 import SimpleITK as sitk
 import sklearn.ensemble as sk_ensemble
@@ -33,7 +34,8 @@ LOADING_KEYS = [structure.BrainImageTypes.T1w,
 def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_dir: str):
     """Brain tissue segmentation using decision forests.
 
-    The main routine executes the medical image analysis pipeline:
+    The main_prediction routine executes the medical image analysis pipeline up to the segmentation step
+    and stores the intermediate data in the "../data/tmp_results" folder  :
 
         - Image loading
         - Registration
@@ -41,8 +43,8 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         - Feature extraction
         - Decision forest classifier model building
         - Segmentation using the decision forest classifier model on unseen images
-        - Post-processing of the segmentation
-        - Evaluation of the segmentation
+        - Save prediction data
+
     """
 
     # load atlas images
@@ -69,7 +71,7 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
     data_train = np.concatenate([img.feature_matrix[0] for img in images])
     labels_train = np.concatenate([img.feature_matrix[1] for img in images]).squeeze()
 
-    #warnings.warn('Random forest parameters not properly set.')
+    warnings.warn('Random forest parameters not properly set.')
     forest = sk_ensemble.RandomForestClassifier(max_features=images[0].feature_matrix[0].shape[1],
                                                 n_estimators=10,
                                                 max_depth=10)
@@ -120,33 +122,46 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         images_prediction.append(image_prediction)
         images_probabilities.append(image_probabilities)
 
-    # post-process segmentation and evaluate with post-processing
-    post_process_params = {'simple_post': True}
-    images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
-                                                     post_process_params, multi_process=False)
+    # save all data used for post processing
 
     for i, img in enumerate(images_test):
-        evaluator.evaluate(images_post_processed[i], img.images[structure.BrainImageTypes.GroundTruth],
-                           img.id_ + '-PP')
 
-        # save results
         sitk.WriteImage(images_prediction[i], os.path.join(result_dir, images_test[i].id_ + '_SEG.mha'), True)
-        sitk.WriteImage(images_post_processed[i], os.path.join(result_dir, images_test[i].id_ + '_SEG-PP.mha'), True)
+        sitk.WriteImage(images_probabilities[i], os.path.join(result_dir, images_test[i].id_ + '_PROB.mha'), True)
 
-    # use two writers to report the results
-    os.makedirs(result_dir, exist_ok=True)  # generate result directory, if it does not exists
-    result_file = os.path.join(result_dir, 'results.csv')
-    writer.CSVWriter(result_file).write(evaluator.results)
 
-    print('\nSubject-wise results...')
-    writer.ConsoleWriter().write(evaluator.results)
 
-    # report also mean and standard deviation among all subjects
-    result_summary_file = os.path.join(result_dir, 'results_summary.csv')
-    functions = {'MEAN': np.mean, 'STD': np.std}
-    writer.CSVStatisticsWriter(result_summary_file, functions=functions).write(evaluator.results)
-    print('\nAggregated statistic results...')
-    writer.ConsoleStatisticsWriter(functions=functions).write(evaluator.results)
+
+
+
+
+    # post-process segmentation and evaluate with post-processing
+    # post_process_params = {'simple_post': True}
+    # images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
+    #                                                  post_process_params, multi_process=False)
+    #
+    # for i, img in enumerate(images_test):
+    #     evaluator.evaluate(images_post_processed[i], img.images[structure.BrainImageTypes.GroundTruth],
+    #                        img.id_ + '-PP')
+    #
+    #     # save results
+    #     sitk.WriteImage(images_prediction[i], os.path.join(result_dir, images_test[i].id_ + '_SEG.mha'), True)
+    #     sitk.WriteImage(images_post_processed[i], os.path.join(result_dir, images_test[i].id_ + '_SEG-PP.mha'), True)
+    #
+    # # use two writers to report the results
+    # os.makedirs(result_dir, exist_ok=True)  # generate result directory, if it does not exists
+    # result_file = os.path.join(result_dir, 'results.csv')
+    # writer.CSVWriter(result_file).write(evaluator.results)
+    #
+    # print('\nSubject-wise results...')
+    # writer.ConsoleWriter().write(evaluator.results)
+    #
+    # # report also mean and standard deviation among all subjects
+    # result_summary_file = os.path.join(result_dir, 'results_summary.csv')
+    # functions = {'MEAN': np.mean, 'STD': np.std}
+    # writer.CSVStatisticsWriter(result_summary_file, functions=functions).write(evaluator.results)
+    # print('\nAggregated statistic results...')
+    # writer.ConsoleStatisticsWriter(functions=functions).write(evaluator.results)
 
     # clear results such that the evaluator is ready for the next evaluation
     evaluator.clear()
@@ -162,8 +177,8 @@ if __name__ == "__main__":
     parser.add_argument(
         '--result_dir',
         type=str,
-        default=os.path.normpath(os.path.join(script_dir, './mia-result')),
-        help='Directory for results.'
+        default=os.path.normpath(os.path.join(script_dir, '../data/tmp_results')),
+        help='Directory to store segmented data prior to post processing.'
     )
 
     parser.add_argument(
