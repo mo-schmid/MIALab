@@ -651,7 +651,7 @@ The following three figures and the corresponding tables show the results of PKF
 
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.4}
 % if using array.sty, it might be a good idea to tweak the value of
 %\extrarowheight %as needed to properly center the text within the cells
 \caption{PKF: Statistical values of Dice index}
@@ -659,6 +659,7 @@ The following three figures and the corresponding tables show the results of PKF
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
+\tabcolsep=0.11cm
 \begin{tabular}{c|c|c|c|c|c}
 \hline
  & WM & GM & H & A & T\\
@@ -675,10 +676,10 @@ $CI_{low}$&$\expnumber{-1.56}{-03}$&$\expnumber{-9.93}{-04}$&$\expnumber{6.00}{-
 %\hline
 $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}{-02}$&$	\expnumber{6.47}{-03}$&$\expnumber{1.17}{-02}$\\
 \hline
-\multicolumn{6}{p{270pt}}{This values are the result of the testing sample, $n=10$. }\\
-\multicolumn{6}{p{270pt}}{$\mu=$ mean with no postprocessing; $\mu_{pkf}=$ mean with PKF postprocessing}\\
-\multicolumn{6}{p{270pt}}{$\Delta=\mu_{pkf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound} \\
-\multicolumn{6}{p{270pt}}{$CI_{high}= 95\%$ confidence interval upper bound.}
+\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{$\mu=$ mean with no postprocessing; $\mu_{pkf}=$ mean with PKF postprocessing; $\Delta=\mu_{pkf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
+%\multicolumn{6}{p{135pt}}{$\Delta=\mu_{pkf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.} \\
+
 \end{tabular}
 \end{table}
 
@@ -691,7 +692,7 @@ $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}
 \end{figure}
 
 \begin{table}[h!]
-\begin{adjustwidth}{-1.5cm}{}
+
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
@@ -701,6 +702,7 @@ $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
+\tabcolsep=0.06cm
 \begin{tabular}{c|c|c|c|c|c}
 \hline
  & WM & GM & H & A & T\\
@@ -712,12 +714,11 @@ p&$\expnumber{3.13}{-02}$&$\expnumber{5.00}{-01}$&$\expnumber{1.95}{-03}$&$\expn
 $CI_{low}$&$\expnumber{-5.23}{-01}$&$\expnumber{-1.16}{-01}$&$\expnumber{-1.42}{+00}$&$\expnumber{-9.32}{-01}$&$\expnumber{-1.09}{+01}$\\
 $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-01}$&$\expnumber{-3.81}{-01}$&$\expnumber{-5.64}{+00}$\\
 \hline
-\multicolumn{6}{p{270pt}}{This values are the result of the testing sample, $n=10$. }\\
-\multicolumn{6}{p{270pt}}{$m=$ median with no postprocessing; $m_{pkf}=$ median with PKF postprocessing}\\
-\multicolumn{6}{p{270pt}}{$\Delta=m_{pkf}-m$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound} \\
-\multicolumn{6}{p{270pt}}{$CI_{high}= 95\%$ confidence interval upper bound.}
+\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{$m=$ median with no postprocessing; $m_{pkf}=$ median with PKF postprocessing; $\Delta=m_{pkf}-m$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
+
 \end{tabular}
-\end{adjustwidth}
+
 \end{table}
 
 \begin{figure}[h!]
@@ -750,6 +751,7 @@ The following three figures show the results of DCRF.
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
+\tabcolsep=0.11cm
 \begin{tabular}{c|c|c|c|c|c}
 \hline
  & WM & GM & H & A & T\\
@@ -761,10 +763,9 @@ p&$\expnumber{5.39}{-03}$&$\expnumber{4.57}{-12}$&$\expnumber{7.92}{-08}$&$\expn
 $CI_{low}$&$\expnumber{-1.44}{-02}$&$\expnumber{-4.82}{-02}$&$\expnumber{7.34}{-02}$&$\expnumber{8.45}{-02}$&$\expnumber{2.23}{-02}$\\
 $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{-02}$&$\expnumber{1.15}{-01}$&$\expnumber{4.43}{-02}$\\
 \hline
-\multicolumn{6}{p{270pt}}{This values are the result of the testing sample, $n=10$. }\\
-\multicolumn{6}{p{270pt}}{$\mu=$ mean with no postprocessing; $\mu_{dcrf}=$ mean with DCRF postprocessing}\\
-\multicolumn{6}{p{270pt}}{$\Delta=\mu_{dcrf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound} \\
-\multicolumn{6}{p{270pt}}{$CI_{high}= 95\%$ confidence interval upper bound.}
+\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{$\mu=$ mean with no postprocessing; $\mu_{dcrf}=$ mean with DCRF postprocessing; $\Delta=\mu_{dcrf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
+
 \end{tabular}
 \end{table}
 
@@ -788,6 +789,7 @@ $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
+\tabcolsep=0.08cm
 \begin{tabular}{c|c|c|c|c|c}
 \hline
  & WM & GM & H & A & T\\
@@ -799,10 +801,9 @@ p&$\expnumber{7.81}{-03}$&$\expnumber{1.95}{-03}$&$\expnumber{1.95}{-03}$&$\expn
 $CI_{low}$&$\expnumber{-7.08}{-01}$&$\expnumber{2.62}{-01}$&$\expnumber{-6.97}{+00}$&$\expnumber{-1.56}{+00}$&$\expnumber{-1.21}{+01}$\\
 $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{+00}$&$\expnumber{-9.71}{-01}$&$\expnumber{-8.66}{+00}$\\
 \hline
-\multicolumn{6}{p{270pt}}{This values are the result of the testing sample, $n=10$. }\\
-\multicolumn{6}{p{270pt}}{$m=$ median with no postprocessing; $m_{dcrf}=$ median with PKF postprocessing}\\
-\multicolumn{6}{p{270pt}}{$\Delta=m_{dcrf}-m$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound} \\
-\multicolumn{6}{p{270pt}}{$CI_{high}= 95\%$ confidence interval upper bound.}
+\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{$m=$ median with no postprocessing; $m_{dcrf}=$ median with PKF postprocessing; $\Delta=m_{dcrf}-m$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
+
 \end{tabular}
 %\end{adjustwidth}
 \end{table}
