@@ -4,7 +4,6 @@ import json
 
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
 import matplotlib.pyplot as plt
 import pingouin as pg
 
@@ -82,36 +81,6 @@ def main(result_dir_ref: str, result_dir_pp: str, plot_dir: str):
         plt.close()
 
     # plt.show()
-
-
-    # for label in data['LABEL'].unique():
-
-
-    # conduct t-test
-    stat_test = pd.DataFrame(columns=['LABEL','mean_diff_DICE','p_DICE','CI95_DICE','mean_diff_HDRFDST','p_HDRFDST'])
-
-    for label in data['LABEL'].unique():
-        # statistical test of Dice coefficient
-        # t_DICE, p_DICE = stats.ttest_rel(ref['DICE'][ref.LABEL == label], pp['DICE'][pp.LABEL == label])
-        st = pg.ttest(ref['DICE'][ref.LABEL == label], pp['DICE'][pp.LABEL == label], paired=True)
-        t_DICE = st.iloc[0]['T']
-        p_DICE = st.iloc[0]['p-val']
-
-
-        mean_DICE = np.mean(pp['DICE'][pp.LABEL == label] - ref['DICE'][ref.LABEL == label])
-        mean_HDRFDST = np.mean(pp['HDRFDST'][pp.LABEL == label] - ref['HDRFDST'][ref.LABEL == label])
-
-        # statistical test of Hausdorff distance
-        # t_HDRFDST, p_HDRFDST = stats.ttest_rel(ref['HDRFDST'][ref.LABEL == label], pp['HDRFDST'][pp.LABEL == label])
-        t_HDRFDST, p_HDRFDST = stats.wilcoxon(ref['HDRFDST'][ref.LABEL == label], pp['HDRFDST'][pp.LABEL == label])
-
-        stat_test = stat_test.append({'LABEL': label,'mean_diff_DICE':mean_DICE, 'p_DICE': p_DICE,'CI95_DICE':st.iloc[0]['CI95%'],
-                                      'mean_diff_HDRFDST':mean_HDRFDST,  'p_HDRFDST': p_HDRFDST}, ignore_index=True)
-
-
-    print(stat_test)
-    print('end main')
-
 
 
 if __name__ == '__main__':
