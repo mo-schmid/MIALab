@@ -12,7 +12,14 @@ from pathlib import Path
 
 
 def main(result_dir_ref: str, result_dir_pp: str, plot_dir: str):
+    """Generates qq-Plots of the testing results
 
+    Args:
+        result_dir_ref (Path): path to the reference data folder (without post-processing)
+        result_dir_pp (Path): path to the data folder with post-processing
+        plot_dir (Path): path to the desired result folder to store the qq-plots
+
+    """
 
     # get absolut path of the result directory
     result_dir_ref = Path(Path.cwd() / result_dir_ref)
