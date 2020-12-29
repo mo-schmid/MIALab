@@ -88,6 +88,14 @@ def metric_to_readable_text(metric: str):
 
 
 def main(results: [ResultParam], plot_dir: Path):
+    """generates box plots comparing two or more result sets for all labels
+
+    Args:
+        results ([ResultParam]): a list of result parameters (Path and description)
+        plot_dir: ath to the desired result folder to store the qq-plots
+
+
+    """
     metrics = ('DICE', 'HDRFDST')  # the metrics we want to plot the results for
     metrics_yaxis_limits = ((0.0, 1.0), (0.0, 18))  # tuples of y-axis limits (min, max) for each metric. Use None if unknown
     labels = ('WhiteMatter','GreyMatter', 'Hippocampus','Amygdala','Thalamus')  # the brain structures/tissues you are interested in
@@ -127,7 +135,6 @@ if __name__ == '__main__':
                                "no pp"))
     results.append(ResultParam(Path(Path.cwd() /"mia-result/gridsearch_PKF/2020-12-11-09-51-54/with_PP/PP-V-20_0-BG-True/results.csv"),
                                "with pp"))
-
 
 
     main(results, Path(Path.cwd() / 'mia-result/plot_results'))
