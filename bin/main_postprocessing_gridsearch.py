@@ -148,7 +148,6 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
                                                                            '2020-10-30-18-31-15')
 
 
-
     # evaluate images without post-processing
     for i, img in enumerate(images_test):
         evaluator.evaluate(images_prediction[i], img.images[structure.BrainImageTypes.GroundTruth], img.id_)
@@ -187,16 +186,13 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
     for post_process_params in post_process_param_list:
 
 
-
-
-
         # create sub-directory for results
         name = 'PP-V-'+ str(post_process_params.get('variance')).replace('.','_') +\
                '-BG-' + str(post_process_params.get('preserve_background'))
         sub_dir = os.path.join(result_dir, name)
         os.makedirs(sub_dir, exist_ok=True)
 
-        # todo: write the used parameter into a text file and store it in the result folder
+        #write the used parameter into a text file and store it in the result folder
         completeName = os.path.join(sub_dir, "parameter.txt")
         file1 = open(completeName, "w+")
         json.dump(post_process_params, file1)
