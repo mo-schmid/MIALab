@@ -8,6 +8,14 @@ from pathlib import Path
 
 
 def main(result_dir: str):
+    """evaluates the a gridsearch
+
+    Finds the best parameter set by ranking all the parameter sets by the DICE coefficient and by the Hausdorff
+    distance. Computes a mean rank per parameter set.
+
+    Args:
+        result_dir (Path): Path to gridsearch folder containing subfolders with results per parameter set
+    """
 
     # get absolut path of the result directory
     result_dir = Path(Path.cwd() / result_dir)
