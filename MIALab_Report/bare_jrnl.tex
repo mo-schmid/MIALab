@@ -440,7 +440,7 @@
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Random Tree Search, Postprocessing, Dense-CRF
+Random Tree Search, Postprocessing, Probabilistic Keyhole Filling, Dense-CRF
 \end{IEEEkeywords}
 
 
@@ -582,15 +582,15 @@ Random Tree Search, Postprocessing, Dense-CRF
 % \fnbelowfloat command of the stfloats package.
 \IEEEPARstart{P}{rogression} of neurodegenerative diseases can be tracked by the atrophy of brain tissues.
 Manual segmentation and measurement is very time consuming and thus is not a viable option in clinical practice. 
-The goal of the pipeline described in this paper is the segmentation of grey matter (GM), white matter(WM), hippocampus, amygdala, and thalamus. 
-GM mostly consists of neuronal cell bodies, which are unmyelinated. WM consists mostly of myelinated axons. These myelinated axons are connected to the GM areas. In the hippocampus occurs learning and memory. The amygdala is responsible for our emotions and aggression, and the thalamus is the relay centre for sensory information. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may lead to less complication and higher success rate during the surgery. 
-In this paper we aim to improve the post-processing of the segmentation. Probabilistic keyhole filling to remove small isolated regions is a simple heuristic approach which is invented by us. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a one of these studies fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}.  Hence, we propose improved segmentation of the parts described using probabilistic keyhole filling and conditional random field algorithm. The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the sub-chapter post-processing including its processes and procedures. The result section is divided by showing our accomplishments in each approach and at last the two approaches are compared. These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
+The goal of the pipeline described in this paper is the segmentation of grey matter , white matter , hippocampus , amygdala , and thalamus . 
+Grey matter mostly consists of neuronal cell bodies, which are unmyelinated. White matter consists mostly of myelinated axons. These myelinated axons are connected to the grey matter areas. In the hippocampus occurs learning and memory. The amygdala is responsible for our emotions and aggression, and the thalamus is the relay centre for sensory information. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may lead to less complication and higher success rate during the surgery. 
+In this paper we aim to improve the postprocessing of the segmentation. Probabilistic keyhole filling to remove small isolated regions is a simple heuristic approach which is invented by us. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a one of these studies fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}.  Hence, we propose improved segmentation of the parts described using probabilistic keyhole filling and conditional random field algorithm. The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the sub-chapter postprocessing including its processes and procedures. The result section is divided by showing our accomplishments in each approach (PKF and CRF). These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
 
 \section{Materials and Methods}
 \subsection{Data}
 The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set. The data set contains images of a three Tesla MRI T1 and T2-weighted with segmentation as ground truth. The data set is defaced in order to make it  completely anonymous.
 \subsection{Methods}
-\begin{figure}[h!]
+\begin{figure}[hb]
 \centering
 \includegraphics[width=2.5in]{img/pipeline}
 \caption{Pipeline.}
@@ -604,37 +604,38 @@ Alignment of the images to a common reference space named atlas
 
 \subsubsection{Preprocessing}
 
-Alignment of the images to a common reference space named atlas
+Improvement of the image quality for the subsequent classification.
 
 \subsubsection{Feature Extraction}
 
-Finding of representing features for brain tissues
+Finding of representing features for brain tissues.
 
 \subsubsection{Classification}
 
-Predicts to which label or class a voxel belongs
+Predicts to which label or class a voxel belongs.
 
 \subsubsection{Postprocessing}
 
-The predicted masks with the segmentation have some obvious mistakes, e.g., keyholes and rough borders. Our approach to solving this issue is by using probabilistic keyhole filling and fully connected conditional random field algorithm. 
+The predicted masks with the segmentation have some obvious mistakes, e.g., keyholes and rough borders. Our approach to solving this issue is by using probabilistic keyhole filling and dense conditional random field algorithm. 
 \newline
 \textbf{Approach I: Probabilistic Keyhole Filling (PKF)}
 \newline
-In this section we explain the basic concept and the procedure of the PKF . The Goal of the PFK is to incorporate prior knowledge into the post-processing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
+In this section we explain the basic concept and the procedure of the PKF . The Goal of the PFK is to incorporate prior knowledge into the postprocessing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
 This means that within the local neighbourhood (26-connected) of one voxel, all voxels should carry the same label (unless it is a boundary voxel).
 \newline
 \textbf{Approach II: Dense Conditional Random Field (DCRF)}
 \newline
-The DCRF model was first published by Philipp Krahenbühl and Vladlen Koltun in NIPS 2011 \cite{Krahenbuhl2012}. In Krähenbühl’s and Koltun’s paper, the exact derivation of the model can be seen. For this paper, the parameter appearance kernel and smoothness kernel were adjusted to achieve the best results . The appearance kernel takes nearby pixels with similar colours into account, which are most probable in the same segmentation label. The smoothness kernel removes small keyholes. The following equation \ref{eq:1} shows the influence of the adjustable parameter and weights of the two-kernel potentials:\newline
+The DCRF model was first published by Philipp Krahenbühl and Vladlen Koltun in NIPS 2011 \cite{Krahenbuhl2012}. In Krähenbühl’s and Koltun’s paper, the exact derivation of the model can be seen. For this paper, the parameter appearance kernel and smoothness kernel were adjusted to achieve the best results . The appearance kernel takes nearby pixels with similar colours into account, which are most probable in the same segmentation label. The smoothness kernel removes small keyholes. The following equation \ref{eq:1} shows the influence of the adjustable parameter and weights of the two-kernel potentials:
 \begin{multline}\label{eq:1}
     k\left(f_i,f_j\right)=\\
-\omega^{\left(1\right)}  exp\left(-\frac{\left| p_i - p_j\right|^2}{2\theta^2_\alpha}-\frac{\left| I_i-I_j\right|^2}{2\theta^2_\beta}\right)\\+\omega^{\left(2\right)}   exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta^2_\gamma}\right)
+\omega^{\left(1\right)}  exp\left(-\frac{\left| p_i - p_j\right|^2}{2\theta^2_\alpha}-\frac{\left| I_i-I_j\right|^2}{2\theta^2_\beta}\right)\\
++\omega^{\left(2\right)}exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta^2_\gamma}\right)
 \end{multline}
 
 $\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are the weights of the equation and were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
 \subsubsection{Data Analysis}
-The result is evaluated on whether the improvements are statistically significant. The Dice index is evaluated using a t-test and the Hausdorff distance is tested using the Wilcoxon signed-rank. 
-Because the change of the matrices before and after the post-processing is compared, the data sets are considered to be paired. For approximately normal distributed differences a paired t-test is used, here for the Dice Index. Otherwise a paired Wilcoxon signed-rank test, here for the Hausdorff distance. The normal distribution is checked graphically by QQ-plots. The data was considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot.
+The result is evaluated on whether the improvements are statistically significant. The Dice index is evaluated using a t-test and the Hausdorff distance is tested using the sign test. 
+Because the change of the matrices before and after the postprocessing is compared, the data sets are considered to be paired. For approximately normal distributed differences a paired t-test is used, here for the Dice index. Otherwise we use a sign test since the Hausdorff distances are not equally distributed around the median. The distribution is evaluated graphically using QQ-plots. The data was considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot.
 
 \section{Results}
 
@@ -642,14 +643,14 @@ Because the change of the matrices before and after the post-processing is compa
 \subsection{Probabilistic Keyhole Filling}
 The following three figures and the corresponding tables show the results of PKF.
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/boxplots/PKF-Dice.png}
-\caption{PKF Dice index compared to the Dice Index without postprocessing (no pp). The corresponding p-values are showed below the boxplot.}
+\caption{PKF Dice index compared to the Dice Index without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice} below next to the average Dice indices and the confidence intervals of each label.}
 \label{fig_pkf_dice}
 \end{figure}
 
-\begin{table}[!h]
+\begin{table}[ht]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1.4}
 % if using array.sty, it might be a good idea to tweak the value of
@@ -676,7 +677,7 @@ $CI_{low}$&$\expnumber{-1.56}{-03}$&$\expnumber{-9.93}{-04}$&$\expnumber{6.00}{-
 %\hline
 $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}{-02}$&$	\expnumber{6.47}{-03}$&$\expnumber{1.17}{-02}$\\
 \hline
-\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{These values are the result of the testing sample, $n=10$ and are evaluated using a significance level of $\alpha = 5\%$. }\\
 \multicolumn{6}{p{3.4in}}{$\mu=$ mean with no postprocessing; $\mu_{pkf}=$ mean with PKF postprocessing; $\Delta=\mu_{pkf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
 %\multicolumn{6}{p{135pt}}{$\Delta=\mu_{pkf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.} \\
 
@@ -684,14 +685,14 @@ $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}
 \end{table}
 
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/boxplots/PKF-HD.png}
-\caption{PKF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp). The corresponding p-values are showed below the boxplot.}
+\caption{PKF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_hd} below next to the average Hausdorff distances and the confidence intervals of each label.}
 \label{fig_pkf-hd}
 \end{figure}
 
-\begin{table}[h!]
+\begin{table}[ht]
 
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1.3}
@@ -714,14 +715,14 @@ p&$\expnumber{3.13}{-02}$&$\expnumber{5.00}{-01}$&$\expnumber{1.95}{-03}$&$\expn
 $CI_{low}$&$\expnumber{-5.23}{-01}$&$\expnumber{-1.16}{-01}$&$\expnumber{-1.42}{+00}$&$\expnumber{-9.32}{-01}$&$\expnumber{-1.09}{+01}$\\
 $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-01}$&$\expnumber{-3.81}{-01}$&$\expnumber{-5.64}{+00}$\\
 \hline
-\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{These values are the result of the testing sample, $n=10$ and are evaluated using a significance level of $\alpha = 5\%$. }\\
 \multicolumn{6}{p{3.4in}}{$m=$ median with no postprocessing; $m_{pkf}=$ median with PKF postprocessing; $\Delta=m_{pkf}-m$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
 
 \end{tabular}
 
 \end{table}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/boxplots/PKF.png}
 \caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with PKF postprocessing method (c) }
@@ -729,19 +730,19 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 \end{figure}
 
 In figure \ref{fig_pkf_dice} all labels show a statistical significant improvement with postprocessing using the parameter variance equal to 20 and including preservation of background. The values of the Dice indices can be seen in table \ref{tbl_pkf_dice} and the values of the Hausdorff distances are in table \ref{tbl_pkf_hd}.
-In figure \ref{fig_pkf-hd} and table \ref{tbl_pkf_hd} the label containing grey matter shows no significant improvement. All other label show a significant improvement, especially the label containing Thalamus the Hausdorff distance is reduces by almost a factor of three.
-In figure \ref{fig_pkf} the visual improvement of the post-processing can be seen. Within the red circled area comes forward, that the miss labeled area is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
+In figure \ref{fig_pkf-hd} and table \ref{tbl_pkf_hd} the label containing grey matter shows no significant improvement. All other label show a significant improvement, especially the label containing thalamus the Hausdorff distance is reduces by almost a factor of three.
+In figure \ref{fig_pkf} the visual improvement of the postprocessing can be seen. The red circle highlights the area where the miss labeled segmentation is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
 
 \subsection{DCRF}
 The following three figures show the results of DCRF.
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/boxplots/DCRF-DICE.png}
 \caption{DCRF Dice index compared to the Dice index without postprocessing (no pp)}
 \label{fig_dcrf_dice}
 \end{figure}
 
-\begin{table}[!h]
+\begin{table}[ht]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
@@ -763,7 +764,7 @@ p&$\expnumber{5.39}{-03}$&$\expnumber{4.57}{-12}$&$\expnumber{7.92}{-08}$&$\expn
 $CI_{low}$&$\expnumber{-1.44}{-02}$&$\expnumber{-4.82}{-02}$&$\expnumber{7.34}{-02}$&$\expnumber{8.45}{-02}$&$\expnumber{2.23}{-02}$\\
 $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{-02}$&$\expnumber{1.15}{-01}$&$\expnumber{4.43}{-02}$\\
 \hline
-\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{These values are the result of the testing sample, $n=10$ and are evaluated using a significance level of $\alpha = 5\%$. }\\
 \multicolumn{6}{p{3.4in}}{$\mu=$ mean with no postprocessing; $\mu_{dcrf}=$ mean with DCRF postprocessing; $\Delta=\mu_{dcrf}-\mu$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
 
 \end{tabular}
@@ -771,7 +772,7 @@ $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{
 
 
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/boxplots/DCRF-HD.png}
 \caption{DCRF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp)}
@@ -779,7 +780,7 @@ $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{
 \end{figure}
 
 \begin{table}[h!]
-%\begin{adjustwidth}{-1.5cm}{}
+
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
@@ -801,14 +802,14 @@ p&$\expnumber{7.81}{-03}$&$\expnumber{1.95}{-03}$&$\expnumber{1.95}{-03}$&$\expn
 $CI_{low}$&$\expnumber{-7.08}{-01}$&$\expnumber{2.62}{-01}$&$\expnumber{-6.97}{+00}$&$\expnumber{-1.56}{+00}$&$\expnumber{-1.21}{+01}$\\
 $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{+00}$&$\expnumber{-9.71}{-01}$&$\expnumber{-8.66}{+00}$\\
 \hline
-\multicolumn{6}{p{3.4in}}{This values are the result of the testing sample, $n=10$ and with a significance level of $\alpha = 5\%$. }\\
+\multicolumn{6}{p{3.4in}}{These values are the result of the testing sample, $n=10$ and are evaluated using a significance level of $\alpha = 5\%$. }\\
 \multicolumn{6}{p{3.4in}}{$m=$ median with no postprocessing; $m_{dcrf}=$ median with PKF postprocessing; $\Delta=m_{dcrf}-m$; p $=$ p-value;  $CI_{low}= 95\%$ confidence interval lower bound; $CI_{high}= 95\%$ confidence interval upper bound.}\\
 
 \end{tabular}
-%\end{adjustwidth}
+
 \end{table}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/boxplots/DCRF.png}
 \caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with DCRF postprocessing method (c) }
@@ -818,15 +819,15 @@ $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{
 Figure \ref{fig_dcrf_dice} show that all difference are statistically significant. However the label white matter and grey matter are significantly worse than without postprocessing.
 The values of the Dice indices can be seen in table \ref{tbl_dcrf_dice} and the values of the Hausdorff distances are in table \ref{tbl_dcrf_hd}.
 Comparing the results using the Hausdorff distance shown in figure \ref{fig_dcrf-hd} and table \ref{tbl_dcrf_hd} the label grey matter is again worse than without postprocessing. All other labels however show a significant improvement compared to no postprocessing. 
-Figure \ref{fig_dcrf} shows the graphical difference of DCRF compared to the ground truth and no postprocessing. The improvement of the label Thalamus can be seen, since again the red parts to the left and right of the Thalamus regions are removed. These removed parts including some keyhole background regions are filled with the green label of white matter. 
+Figure \ref{fig_dcrf} shows the graphical difference of DCRF compared to the ground truth and no postprocessing. The improvement of the label thalamus comes clearly forward, since again the red parts to the left and right of the thalamus regions are removed. These removed parts including some keyhole background regions are filled with the green label of white matter. 
 The boundaries of the grey matter are blown up, i.e. GM is less sparse in the postprocessing image using DCRF compared to the ground truth and the image without postprocessing.
 
 
 \section{Discussion}
 The figures on which the comparison of the Hausdorff distance are plotted, show the most significant difference. The PKF method shows a significant improvement compared to the images without postprocessing. The second method implemented shows an even higher significant improvement. This additional improvement was expected, because the DCRF method contains a PKF method using a Gaussian approximation. In the graphical comparisons figures \ref{fig_pkf} and \ref{fig_dcrf}, the impact of the appearance kernel can be seen in comparison to only the keyhole filling method. The edges of the DCRF method appear to be more enlarged compared to the edges of the PKF method.
-Although the most differences between no postprocessing and postprocessing are significant their impact on the overall segmentation is questionable. For the PKF and the DCRF the largest changes in the metric was in both cases made in the Hausdorff distance. There we can see an improvement for the labels of the smaller brain regions (hippocampus, amygdala, thalamus). This Change can also be seen in the visual interpretation of the post processing, where the miss-labeled regions of the (Red label, thalamus) are corrected. The small changes in the dice coefficient could be explained by the fact, that both Methods do not alter the overall area of an label on a large extent. Thus correcting the labels of only a few voxels has almost no effect on the dice coefficient.
+Although the most differences between no postprocessing and postprocessing are significant their impact on the overall segmentation is questionable. For the PKF and the DCRF the largest changes in the metric was in both cases made in the Hausdorff distance. There we can see an improvement for the labels of the smaller brain regions (hippocampus, amygdala, thalamus). This Change can also be seen in the visual interpretation of the postprocessing, where the miss-labeled regions of the (Red label, thalamus) are corrected. The small changes in the dice indices could be explained by the fact, that both Methods do not alter the overall area of an label on a large extent. Thus correcting the labels of only a few voxels has almost no effect on the dice indices.
 \section{Conclusion}
-Our second postprocessing method resulted in significantly better results in comparison to our other approaches measured in Dice Index and Hausdorff Distances. However, the computational effort using DCRF is significantly higher in comparison to the probabilistic keyhole filling method. A disadvantage of the probabilistic keyhole filling, which is clearly visible in figure \ref{fig_pkf}, is the rough edges. This is a clear advantage of the DCRF. To improve the probabilistic keyhole filling, a smaller variance value could be defined in order to not just fill the keyholes but also fill small gaps on the edges. This could result in a sufficient compromise between quality and speed of the segmentation.
+Our second postprocessing method resulted in significantly better results in comparison to our other approaches measured in Dice indices and Hausdorff distances. However, the computational effort using DCRF is significantly higher in comparison to the probabilistic keyhole filling method. A disadvantage of the probabilistic keyhole filling, which is clearly visible in figure \ref{fig_pkf}, is the rough edges. This is a clear advantage of the DCRF. To improve the probabilistic keyhole filling, a smaller variance value could be defined in order to not just fill the keyholes but also fill small gaps on the edges. This could result in a sufficient compromise between quality and speed of the segmentation.
 
 
 
@@ -851,35 +852,35 @@ Our second postprocessing method resulted in significantly better results in com
 \label{sec_qq}
 These QQ-Plots helped us to chose the correct statistical test to evaluate the whether the the differences are statistical significant. 
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{img/QQ_plots_PKF/GreyMatter.png}
 \caption{QQ-Plot of grey matter}
 \label{fig_qq_gm}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/WhiteMatter.png}
 \caption{QQ-Plot of white matter}
 \label{fig_qq_wm}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/Hippocampus.png}
 \caption{QQ-Plot of hippocampus}
 \label{fig_qq_h}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/Thalamus.png}
 \caption{QQ-Plot of thalamus}
 \label{fig_qq_t}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/Amygdala.png}
 \caption{QQ-Plot of amygdala}
