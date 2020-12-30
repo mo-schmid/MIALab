@@ -284,6 +284,7 @@
 % The latest version can be found at:
 % http://www.ctan.org/pkg/dblfloatfix
 
+%\usepackage[ngerman]{babel}
 
 
 
@@ -439,9 +440,9 @@
 
 
 % Note that keywords are not normally used for peerreview papers.
-\begin{IEEEkeywords}
-Random Tree Search, Postprocessing, Probabilistic Keyhole Filling, Dense-CRF
-\end{IEEEkeywords}
+%\begin{IEEEkeywords}
+%Random Tree Search, Postprocessing, Probabilistic Keyhole Filling, Dense-CRF
+%\end{IEEEkeywords}
 
 
 
@@ -591,7 +592,7 @@ The chapter Material and Methods gives a quick overview of the whole pipeline. O
 \subsection{Data}
 The data used for the training of the model is from 30 unrelated healthy subjects from the Human Connectome Project data set. The data set contains images of a three Tesla MRI T1 and T2-weighted with segmentation as ground truth. The data set is defaced in order to make it  completely anonymous.
 \subsection{Methods}
-\begin{figure}[hb]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=2.5in]{img/pipeline}
 \caption{Pipeline.}
@@ -609,7 +610,7 @@ Improvement of the image quality for the subsequent classification.
 
 \subsubsection{Feature Extraction}
 
-Finding of representing features for brain tissues.
+Finding representing features for brain tissues.
 
 \subsubsection{Classification}
 
@@ -637,7 +638,7 @@ The DCRF model was first published by Philipp Krahenbühl and Vladlen Koltun in 
 $\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are the weights of the equation and were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
 \subsubsection{Data Analysis}
 The result is evaluated on whether the improvements are statistically significant. The Dice index is evaluated using a t-test and the Hausdorff distance is tested using the sign test. 
-Because the change of the matrices before and after the postprocessing is compared, the data sets are considered to be paired. For approximately normal distributed differences a paired t-test is used, here for the Dice index. Otherwise we use a sign test since the Hausdorff distances are not equally distributed around the median. The distribution is evaluated graphically using QQ-plots. The data was considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot.
+Because the change of the matrices before and after the postprocessing is compared, the data sets are considered to be paired. For approximately normal distributed differences a paired t-test is used, in this paper used for the Dice index. Otherwise we use a sign test since the Hausdorff distances are not equally distributed around the median. The distribution is evaluated graphically using QQ-plots. The data was considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot.
 
 \section{Results}
 
@@ -732,7 +733,7 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 \end{figure}
 
 In figure \ref{fig_pkf_dice} all labels show a statistical significant improvement with postprocessing using the parameter variance equal to 20 and including preservation of background. The values of the Dice indices can be seen in table \ref{tbl_pkf_dice} and the values of the Hausdorff distances are in table \ref{tbl_pkf_hd}.
-In figure \ref{fig_pkf-hd} and table \ref{tbl_pkf_hd} the label containing grey matter shows no significant improvement. All other label show a significant improvement, especially the label containing thalamus the Hausdorff distance is reduces by almost a factor of three.
+In figure \ref{fig_pkf-hd} and table \ref{tbl_pkf_hd} the label containing grey matter shows no significant improvement. All other labels show a significant improvement, especially for the label containing thalamus the Hausdorff distance is reduced by almost a factor of three.
 In figure \ref{fig_pkf} the visual improvement of the postprocessing can be seen. The red circle highlights the area where the miss labeled segmentation is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
 
 \subsection{DCRF}
@@ -818,7 +819,7 @@ $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{
 \label{fig_dcrf}
 \end{figure}
 
-Figure \ref{fig_dcrf_dice} show that all difference are statistically significant. However the label white matter and grey matter are significantly worse than without postprocessing.
+Figure \ref{fig_dcrf_dice} shows that all difference are statistically significant. However, the label white matter and grey matter are significantly worse than without postprocessing.
 The values of the Dice indices can be seen in table \ref{tbl_dcrf_dice} and the values of the Hausdorff distances are in table \ref{tbl_dcrf_hd}.
 Comparing the results using the Hausdorff distance shown in figure \ref{fig_dcrf-hd} and table \ref{tbl_dcrf_hd} the label grey matter is again worse than without postprocessing. All other labels however show a significant improvement compared to no postprocessing. 
 Figure \ref{fig_dcrf} shows the graphical difference of DCRF compared to the ground truth and no postprocessing. The improvement of the label thalamus comes clearly forward, since again the red parts to the left and right of the thalamus regions are removed. These removed parts including some keyhole background regions are filled with the green label of white matter. 
@@ -827,7 +828,7 @@ The boundaries of the grey matter are blown up, i.e. GM is less sparse in the po
 
 \section{Discussion}
 The figures on which the comparison of the Hausdorff distance are plotted, show the most significant difference. The PKF method shows a significant improvement compared to the images without postprocessing. The second method implemented shows an even higher significant improvement. This additional improvement was expected, because the DCRF method contains a PKF method using a Gaussian approximation. In the graphical comparisons figures \ref{fig_pkf} and \ref{fig_dcrf}, the impact of the appearance kernel can be seen in comparison to only the keyhole filling method. The edges of the DCRF method appear to be more enlarged compared to the edges of the PKF method.
-Although the most differences between no postprocessing and postprocessing are significant their impact on the overall segmentation is questionable. For the PKF and the DCRF the largest changes in the metric was in both cases made in the Hausdorff distance. There we can see an improvement for the labels of the smaller brain regions (hippocampus, amygdala, thalamus). This Change can also be seen in the visual interpretation of the postprocessing, where the miss-labeled regions of the (Red label, thalamus) are corrected. The small changes in the dice indices could be explained by the fact, that both Methods do not alter the overall area of an label on a large extent. Thus correcting the labels of only a few voxels has almost no effect on the dice indices.
+Although the most differences between no postprocessing and postprocessing are significant their impact on the overall segmentation is questionable. For the PKF and the DCRF the largest changes in the metric was in both cases made in the Hausdorff distance. There we can see an improvement for the labels of the smaller brain regions (hippocampus, amygdala, thalamus). This Change can also be seen in the visual interpretation of the postprocessing, where the mislabeled regions of the Red segmentation (thalamus) are corrected. The small changes in the dice indices could be explained by the fact, that both Methods do not alter the overall area of an label on a large extent. Thus correcting the labels of only a few voxels has almost no effect on the dice indices.
 \section{Conclusion}
 Our second postprocessing method resulted in significantly better results in comparison to our other approaches measured in Dice indices and Hausdorff distances. However, the computational effort using DCRF is significantly higher in comparison to the probabilistic keyhole filling method. A disadvantage of the probabilistic keyhole filling, which is clearly visible in figure \ref{fig_pkf}, is the rough edges. This is a clear advantage of the DCRF. To improve the probabilistic keyhole filling, a smaller variance value could be defined in order to not just fill the keyholes but also fill small gaps on the edges. This could result in a sufficient compromise between quality and speed of the segmentation.
 
@@ -898,7 +899,8 @@ These QQ-Plots helped us to chose the correct statistical test to evaluate the w
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
-This paper was created in a group work during the lecture Medical Image Analysis Lab. The authors would like to thank Elias Rüfenacht and You Suhang for the great support during the semester.
+
+The work described in this paper was created in a group work during the lecture Medical Image Analysis Lab. The authors would like to thank Elias R\"ufenacht and You Suhang for the great support during the semester. The writing of this paper was created during the lecture Scientific Writing. The authors would like to thank Dr. Simon Milligan for the very useful workshops during the semester, which gave us plenty of useful recommendations regarding writing styles of scientific papers.
 
 
 
