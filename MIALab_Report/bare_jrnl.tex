@@ -594,7 +594,7 @@ The data used for the training of the model is from 30 unrelated healthy subject
 \begin{figure}[hb]
 \centering
 \includegraphics[width=2.5in]{img/pipeline}
-\caption{Pipeline.}
+\caption{Schematic representation of the image processing pipeline.}
 \label{fig_pipeline}
 \end{figure}
 
@@ -636,8 +636,7 @@ The DCRF model was first published by Philipp Krahenbühl and Vladlen Koltun in 
 
 $\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are the weights of the equation and were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
 \subsubsection{Data Analysis}
-The result is evaluated on whether the improvements are statistically significant. The Dice index is evaluated using a t-test and the Hausdorff distance is tested using the sign test. 
-Because the change of the matrices before and after the postprocessing is compared, the data sets are considered to be paired. For approximately normal distributed differences a paired t-test is used, here for the Dice index. Otherwise we use a sign test since the Hausdorff distances are not equally distributed around the median. The distribution is evaluated graphically using QQ-plots. The data was considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot.
+The results are evaluated on whether the improvements are statistically significant (significance level $\alpha = 5\%$). Because the change of the metrics before and after the postprocessing is compared, the data is considered to be paired. Therefore, the tests are performed on the differences of the metrics before and after the postprocessing of a data set. Depending on the distribution of the obtained data a different statistical test is used. A paired two-sided t-test is used if the distribution is approximately normal and a sign test otherwise. The distribution is evaluated graphically using QQ-plots. The data is considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot. For our data we used the paired two-sided t-test to evaluate the difference in the Dice coefficient and the sign test to evaluate the the difference in the Hausdorff distance. 
 \onecolumn
 \section{Results}
 
@@ -648,7 +647,7 @@ The following three figures and the corresponding tables show the results of PKF
 \begin{figure*}[ht]
 \centering
 %\includegraphics[width=3.4in]{MIALab_Report/img/boxplots/PKF-Dice.png}
-\includegraphics[width=\textwidth]{MIALab_Report/img/boxplots/PKF-Dice.png}
+\includegraphics[width=\textwidth]{img/boxplots/PKF-Dice.png}
 \caption{PKF Dice index compared to the Dice Index without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice} below next to the average Dice indices and the confidence intervals of each label.}
 \label{fig_pkf_dice}
 \end{figure*}
@@ -693,7 +692,7 @@ $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}
 \begin{figure*}[ht]
 \centering
 %\includegraphics[width=3.4in]{MIALab_Report/img/boxplots/PKF-HD.png}
-\includegraphics[width=\textwidth]{MIALab_Report/img/boxplots/PKF-HD.png}
+\includegraphics[width=\textwidth]{img/boxplots/PKF-HD.png}
 \caption{PKF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_hd} below next to the average Hausdorff distances and the confidence intervals of each label.}
 \label{fig_pkf-hd}
 \end{figure*}
@@ -731,7 +730,7 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 \begin{figure*}[ht]
 \centering
 %\includegraphics[width=3.4in]{MIALab_Report/img/boxplots/PKF.png}
-\includegraphics[width=\textwidth]{MIALab_Report/img/boxplots/PKF.png}
+\includegraphics[width=\textwidth]{img/boxplots/PKF.png}
 \caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with PKF postprocessing method (c) }
 \label{fig_pkf}
 \end{figure*}
@@ -745,7 +744,7 @@ The following three figures show the results of DCRF.
 \begin{figure*}[ht]
 \centering
 %\includegraphics[width=3.4in]{MIALab_Report/img/boxplots/DCRF-DICE.png}
-\includegraphics[width=\textwidth]{MIALab_Report/img/boxplots/DCRF-DICE.png}
+\includegraphics[width=\textwidth]{img/boxplots/DCRF-DICE.png}
 \caption{DCRF Dice index compared to the Dice index without postprocessing (no pp)}
 \label{fig_dcrf_dice}
 \end{figure*}
@@ -783,7 +782,7 @@ $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{
 \begin{figure*}[ht]
 \centering
 %\includegraphics[width=3.4in]{MIALab_Report/img/boxplots/DCRF-HD.png}
-\includegraphics[width=\textwidth]{MIALab_Report/img/boxplots/DCRF-HD.png}
+\includegraphics[width=\textwidth]{img/boxplots/DCRF-HD.png}
 \caption{DCRF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp)}
 \label{fig_dcrf-hd}
 \end{figure*}
@@ -820,7 +819,7 @@ $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{
 
 \begin{figure*}[ht]
 \centering
-\includegraphics[width=\textwidth]{MIALab_Report/img/boxplots/DCRF.png}
+\includegraphics[width=\textwidth]{img/boxplots/DCRF.png}
 %\includegraphics[width=3.4in]{MIALab_Report/img/boxplots/DCRF.png}
 \caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with DCRF postprocessing method (c) }
 \label{fig_dcrf}
@@ -871,28 +870,28 @@ These QQ-Plots helped us to chose the correct statistical test to evaluate the w
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/WhiteMatter.png}
+\includegraphics[width=3.4in]{img/QQ_plots_PKF/WhiteMatter.png}
 \caption{QQ-Plot of white matter}
 \label{fig_qq_wm}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/Hippocampus.png}
+\includegraphics[width=3.4in]{img/QQ_plots_PKF/Hippocampus.png}
 \caption{QQ-Plot of hippocampus}
 \label{fig_qq_h}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/Thalamus.png}
+\includegraphics[width=3.4in]{img/QQ_plots_PKF/Thalamus.png}
 \caption{QQ-Plot of thalamus}
 \label{fig_qq_t}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=3.4in]{MIALab_Report/img/QQ_plots_PKF/Amygdala.png}
+\includegraphics[width=3.4in]{img/QQ_plots_PKF/Amygdala.png}
 \caption{QQ-Plot of amygdala}
 \label{fig_qq_a}
 \end{figure}
