@@ -582,9 +582,10 @@ Random Tree Search, Postprocessing, Probabilistic Keyhole Filling, Dense-CRF
 % \fnbelowfloat command of the stfloats package.
 \IEEEPARstart{P}{rogression} of neurodegenerative diseases can be tracked by the atrophy of brain tissues.
 Manual segmentation and measurement is very time consuming and thus is not a viable option in clinical practice. 
-The goal of the pipeline described in this paper is the segmentation of grey matter , white matter , hippocampus , amygdala , and thalamus . 
+The goal of the pipeline described in this paper is the segmentation of grey matter, white matter, hippocampus, amygdala and thalamus. 
 Grey matter mostly consists of neuronal cell bodies, which are unmyelinated. White matter consists mostly of myelinated axons. These myelinated axons are connected to the grey matter areas. In the hippocampus occurs learning and memory. The amygdala is responsible for our emotions and aggression, and the thalamus is the relay centre for sensory information. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may lead to less complication and higher success rate during the surgery. 
-In this paper we aim to improve the postprocessing of the segmentation. Probabilistic keyhole filling to remove small isolated regions is a simple heuristic approach which is invented by us. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a one of these studies fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}.  Hence, we propose improved segmentation of the parts described using probabilistic keyhole filling and conditional random field algorithm. The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the sub-chapter postprocessing including its processes and procedures. The result section is divided by showing our accomplishments in each approach (PKF and CRF). These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
+In this paper we investigate the hypothesis whether spatial regularization improves the segmentation of the given segmentation pipeline. Therefore we have examined two different postprocessing approaches. Probabilistic keyhole filling to remove small isolated regions is a simple heuristic approach which is invented by us. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a one of these studies fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}. Hence, we propose improved segmentation of the parts described using a conditional random field algorithm as a second approach.
+The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the sub-chapter postprocessing including its processes and procedures. The result section is divided by showing our accomplishments in each approach (PKF and CRF). These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
 
 \section{Materials and Methods}
 \subsection{Data}
@@ -600,7 +601,7 @@ The data used for the training of the model is from 30 unrelated healthy subject
 
 \subsubsection{Registration}
 
-Alignment of the images to a common reference space named atlas
+Alignment of the images to a common reference space named atlas.
 
 \subsubsection{Preprocessing}
 
@@ -616,11 +617,11 @@ Predicts to which label or class a voxel belongs.
 
 \subsubsection{Postprocessing}
 
-The predicted masks with the segmentation have some obvious mistakes, e.g., keyholes and rough borders. Our approach to solving this issue is by using probabilistic keyhole filling and dense conditional random field algorithm. 
+The predicted masks with the segmentation have some obvious mistakes, e.g. keyholes, misclassified voxels and rough borders. Our approach to solving this issue is by using probabilistic keyhole filling and dense conditional random field algorithm. 
 \newline
 \textbf{Approach I: Probabilistic Keyhole Filling (PKF)}
 \newline
-In this section we explain the basic concept and the procedure of the PKF . The Goal of the PFK is to incorporate prior knowledge into the postprocessing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
+In this section we explain the basic concept and the procedure of the PKF. The Goal of the PFK is to incorporate prior knowledge into the postprocessing. We know that we are segmenting connected structures within the brain, therefore the obtained labels also have to be connected. The structures to be segmented are also uniform in themselves.
 This means that within the local neighbourhood (26-connected) of one voxel, all voxels should carry the same label (unless it is a boundary voxel).
 \newline
 \textbf{Approach II: Dense Conditional Random Field (DCRF)}
