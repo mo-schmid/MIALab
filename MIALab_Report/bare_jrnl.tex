@@ -637,21 +637,21 @@ The DCRF model was first published by Philipp Krahenbühl and Vladlen Koltun in 
 
 $\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are the weights of the equation and were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
 \subsubsection{Data Analysis}
-The results are evaluated on whether the improvements are statistically significant (significance level $\alpha = 5\%$). Because the change of the metrics before and after the postprocessing is compared, the data is considered to be paired. Therefore, the tests are performed on the differences of the metrics before and after the postprocessing of a data set. Depending on the distribution of the obtained data a different statistical test is used. A paired two-sided t-test is used if the distribution is approximately normal and a sign test otherwise. The distribution is evaluated graphically using QQ-plots. The data is considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot. For our data we used the paired two-sided t-test to evaluate the difference in the Dice coefficient and the sign test to evaluate the the difference in the Hausdorff distance. 
-\onecolumn
+The results are evaluated on whether the improvements are statistically significant (significance level $\alpha = 5\%$). Because the change of the metrics before and after the postprocessing is compared, the data is considered to be paired. Therefore, the tests are performed on the differences of the metrics before and after the postprocessing of a data set. Depending on the distribution of the obtained data a different statistical test is used. A paired two-sided t-test is used if the distribution is approximately normal and a sign test otherwise. The distribution is evaluated graphically using QQ-plots. The data is considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in appendix \ref{sec_qq} QQ-Plot. For our data we used the paired two-sided t-test to evaluate the difference in the Dice index and the sign test to evaluate the difference in the Hausdorff distance. 
+%\onecolumn
 \section{Results}
 
 \newcommand{\expnumber}[2]{{#1}\mathrm{e}{#2}}
 \subsection{Probabilistic Keyhole Filling}
-The following three figures and the corresponding tables show the results of PKF.
+The following figures and the corresponding tables show the results of PKF. In appendix \ref{sec_bb} the boxplots are shown again in full size.
 
 \begin{figure}[ht]
 \centering
 
 %\includegraphics[width=3.4in]{img/boxplots/PKF-Dice.png}
-\includegraphics[width=\textwidth]{img/boxplots/PKF-Dice.png}
+\includegraphics[width=3.4in]{img/boxplots/PKF-Dice.png}
 
-\caption{PKF Dice index compared to the Dice Index without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice} below next to the average Dice indices and the confidence intervals of each label.}
+\caption{PKF Dice index compared to the Dice index without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice} below next to the average Dice indices and the confidence intervals of each label.}
 \label{fig_pkf_dice}
 \end{figure}
 
@@ -693,7 +693,7 @@ $CI_{high}$&$	\expnumber{-1.15}{-03}$&$\expnumber{-4.51}{-04}$&$\expnumber{1.15}
 \begin{figure}[ht]
 \centering
 %\includegraphics[width=3.4in]{img/boxplots/PKF-HD.png}
-\includegraphics[width=\textwidth]{img/boxplots/PKF-HD.png}
+\includegraphics[width=3.4in]{img/boxplots/PKF-HD.png}
 \caption{PKF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_hd} below next to the average Hausdorff distances and the confidence intervals of each label.}
 \label{fig_pkf-hd}
 \end{figure}
@@ -728,10 +728,10 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[h!]
 \centering
 %\includegraphics[width=3.4in]{img/boxplots/PKF.png}
-\includegraphics[width=\textwidth]{img/boxplots/PKF.png}
+\includegraphics[width=3.4in]{img/boxplots/PKF.png}
 \caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with PKF postprocessing method (c) }
 \label{fig_pkf}
 \end{figure}
@@ -739,13 +739,14 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 In figure \ref{fig_pkf_dice} all labels show a statistical significant improvement with postprocessing using the parameter variance equal to 20 and including preservation of background. The values of the Dice indices can be seen in table \ref{tbl_pkf_dice} and the values of the Hausdorff distances are in table \ref{tbl_pkf_hd}.
 In figure \ref{fig_pkf-hd} and table \ref{tbl_pkf_hd} the label containing grey matter shows no significant improvement. All other labels show a significant improvement, especially for the label containing thalamus the Hausdorff distance is reduced by almost a factor of three.
 In figure \ref{fig_pkf} the visual improvement of the postprocessing can be seen. The red circle highlights the area where the miss labeled segmentation is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
+%\newpage
 
-\subsection{DCRF}
-The following three figures show the results of DCRF.
+\subsection{Dense Conditional Random Field (DCRF)}
+The following figures and the corresponding tables show the results of DCRF. In appendix \ref{sec_bb} the boxplots are shown again in full size.
 \begin{figure}[ht]
 \centering
 %\includegraphics[width=3.4in]{img/boxplots/DCRF-DICE.png}
-\includegraphics[width=\textwidth]{img/boxplots/DCRF-DICE.png}
+\includegraphics[width=3.4in]{img/boxplots/DCRF-DICE.png}
 \caption{DCRF Dice index compared to the Dice index without postprocessing (no pp)}
 \label{fig_dcrf_dice}
 \end{figure}
@@ -780,10 +781,10 @@ $CI_{high}$&$\expnumber{-3.37}{-03}$&$\expnumber{-4.38}{-02}$&$\expnumber{9.83}{
 
 
 
-\begin{figure}[ht]
+\begin{figure}[h!]
 \centering
 %\includegraphics[width=3.4in]{img/boxplots/DCRF-HD.png}
-\includegraphics[width=\textwidth]{img/boxplots/DCRF-HD.png}
+\includegraphics[width=3.4in]{img/boxplots/DCRF-HD.png}
 \caption{DCRF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp)}
 \label{fig_dcrf-hd}
 \end{figure}
@@ -821,7 +822,7 @@ $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{
 \begin{figure}[ht]
 \centering
 
-\includegraphics[width=\textwidth]{img/boxplots/DCRF.png}
+\includegraphics[width=3.4in]{img/boxplots/DCRF.png}
 %\includegraphics[width=3.4in]{img/boxplots/DCRF.png}
 \caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with DCRF postprocessing method (c) }
 \label{fig_dcrf}
@@ -833,7 +834,8 @@ Comparing the results using the Hausdorff distance shown in figure \ref{fig_dcrf
 Figure \ref{fig_dcrf} shows the graphical difference of DCRF compared to the ground truth and no postprocessing. The improvement of the label thalamus comes clearly forward, since again the red parts to the left and right of the thalamus regions are removed. These removed parts including some keyhole background regions are filled with the green label of white matter. 
 The boundaries of the grey matter are blown up, i.e. GM is less sparse in the postprocessing image using DCRF compared to the ground truth and the image without postprocessing.
 
-
+%\newpage
+%\twocolumn
 \section{Discussion}
 The figures on which the comparison of the Hausdorff distance are plotted, show the most significant difference. The PKF method shows a significant improvement compared to the images without postprocessing. The second method implemented shows an even higher significant improvement. This additional improvement was expected, because the DCRF method contains a PKF method using a Gaussian approximation. In the graphical comparisons figures \ref{fig_pkf} and \ref{fig_dcrf}, the impact of the appearance kernel can be seen in comparison to only the keyhole filling method. The edges of the DCRF method appear to be more enlarged compared to the edges of the PKF method.
 Although the most differences between no postprocessing and postprocessing are significant their impact on the overall segmentation is questionable. For the PKF and the DCRF the largest changes in the metric was in both cases made in the Hausdorff distance. There we can see an improvement for the labels of the smaller brain regions (hippocampus, amygdala, thalamus). This Change can also be seen in the visual interpretation of the postprocessing, where the mislabeled regions of the Red segmentation (thalamus) are corrected. The small changes in the dice indices could be explained by the fact, that both Methods do not alter the overall area of an label on a large extent. Thus correcting the labels of only a few voxels has almost no effect on the dice indices.
@@ -857,46 +859,9 @@ Our second postprocessing method resulted in significantly better results in com
 % starts a section numbered zero.)
 %
 
-\newpage
+%\onecolumn
+%\newpage
 \appendices
-\section{QQ-Plot}
-\label{sec_qq}
-These QQ-Plots helped us to chose the correct statistical test to evaluate the whether the the differences are statistical significant. 
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=3.4in]{img/QQ_plots_PKF/GreyMatter.png}
-\caption{QQ-Plot of grey matter}
-\label{fig_qq_gm}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=3.4in]{img/QQ_plots_PKF/WhiteMatter.png}
-\caption{QQ-Plot of white matter}
-\label{fig_qq_wm}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=3.4in]{img/QQ_plots_PKF/Hippocampus.png}
-\caption{QQ-Plot of hippocampus}
-\label{fig_qq_h}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=3.4in]{img/QQ_plots_PKF/Thalamus.png}
-\caption{QQ-Plot of thalamus}
-\label{fig_qq_t}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=3.4in]{img/QQ_plots_PKF/Amygdala.png}
-\caption{QQ-Plot of amygdala}
-\label{fig_qq_a}
-\end{figure}
 
 
 % you can choose not to have a title for an appendix
@@ -906,10 +871,108 @@ These QQ-Plots helped us to chose the correct statistical test to evaluate the w
 
 
 % use section* for acknowledgment
+%\twocolumn
 \section*{Acknowledgment}
 
-The work described in this paper was created in a group work during the lecture Medical Image Analysis Lab. The authors would like to thank Elias R\"ufenacht and You Suhang for the great support during the semester. The writing of this paper was created during the lecture Scientific Writing. The authors would like to thank Dr. Simon Milligan for the very useful workshops during the semester, which gave us plenty of useful recommendations regarding writing styles of scientific papers.
+The work described in this paper was created in a group work during the lecture Medical Image Analysis Lab. The authors would like to thank Elias R\"ufenacht and You Suhang for the great support during the semester. The writing of this paper was created during the lecture Scientific Writing. The authors would like to thank Dr. Simon Milligan for the very useful workshops during the semester, which gave us plenty of recommendations regarding writing styles for scientific papers.
+%\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliography{library}
 
+\newpage
+\onecolumn
+\section{Boxplots}
+\label{sec_bb}
+In this section the boxplots are shown again but bigger. Our intention is to give the readers the possibility to read further statistical values more accurately. 
+\subsection{PKF}
+\label{sec_bb_pfk}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=4.9in]{img/boxplots/PKF-Dice.png}
+\caption{PKF Dice index compared to the Dice index without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice}, next to the average Dice indices and the confidence intervals of each label.}
+\label{fig_pkf_dice_appendix}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+
+\includegraphics[width=4.9in]{img/boxplots/PKF-HD.png}
+\caption{PKF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_hd}, next to the average Hausdorff distances and the confidence intervals of each label.}
+\label{fig_pkf-hd_appendix}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+
+\includegraphics[width=4.9in]{img/boxplots/PKF.png}
+\caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with PKF postprocessing method (c) }
+\label{fig_pkf_appendix}
+\end{figure}
+\newpage
+\subsection{DCRF}
+\label{sec_bb_dcrf}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=4.9in]{img/boxplots/DCRF-DICE.png}
+\caption{DCRF Dice index compared to the Dice index without postprocessing (no pp)}
+\label{fig_dcrf_dice_appendix}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=4.9in]{img/boxplots/DCRF-HD.png}
+\caption{DCRF Hausdorff distance compared to the Hausdorff distance without postprocessing (no pp)}
+\label{fig_dcrf-hd_appendix}
+\end{figure}
+\begin{figure}[h!]
+\centering
+
+\includegraphics[width=4.9in]{img/boxplots/DCRF.png}
+%\includegraphics[width=3.4in]{img/boxplots/DCRF.png}
+\caption{Graphical comparison of the axial ground truth (a) to axial segmentation with no postprocessing (b) and to the axial segmentation with DCRF postprocessing method (c) }
+\label{fig_dcrf_appendix}
+\end{figure}
+
+\clearpage
+\newpage
+\section{QQ-Plot}
+\label{sec_qq}
+These QQ-Plots helped us to chose the correct statistical test to evaluate the whether the the differences are statistical significant. 
+
+\begin{figure}[hb]
+\centering
+\includegraphics[width=5.6in]{img/QQ_plots_PKF/GreyMatter.png}
+\caption{QQ-Plot of grey matter}
+\label{fig_qq_gm}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=5.6in]{img/QQ_plots_PKF/WhiteMatter.png}
+\caption{QQ-Plot of white matter}
+\label{fig_qq_wm}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=5.6in]{img/QQ_plots_PKF/Hippocampus.png}
+\caption{QQ-Plot of hippocampus}
+\label{fig_qq_h}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=5.6in]{img/QQ_plots_PKF/Thalamus.png}
+\caption{QQ-Plot of thalamus}
+\label{fig_qq_t}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=5.6in]{img/QQ_plots_PKF/Amygdala.png}
+\caption{QQ-Plot of amygdala}
+\label{fig_qq_a}
+\end{figure}
 
 
 % Can use something like this to put references on a page
@@ -944,8 +1007,8 @@ The work described in this paper was created in a group work during the lecture 
 % (used to reserve space for the reference number labels box)
 
 %\nocite{*}
-\bibliographystyle{IEEEtran}
-\bibliography{library}
+%\bibliographystyle{IEEEtran}
+%\bibliography{library}
 %\ibitem{IEEEhowto:kopka}
 
 
