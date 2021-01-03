@@ -585,7 +585,7 @@
 Manual segmentation and measurement is very time consuming and thus is not a viable option in clinical practice. 
 The goal of the pipeline described in this paper is the segmentation of grey matter, white matter, hippocampus, amygdala and thalamus. 
 Grey matter mostly consists of neuronal cell bodies, which are unmyelinated. White matter consists mostly of myelinated axons. These myelinated axons are connected to the grey matter areas. In the hippocampus occurs learning and memory. The amygdala is responsible for our emotions and aggression, and the thalamus is the relay centre for sensory information. To segment these parts correctly, i.e. know their position and volume accurately, is an important step during neurosurgical planning and simulation, which may lead to less complication and higher success rate during the surgery. 
-In this paper we investigate the hypothesis whether spatial regularization improves the segmentation of the given segmentation pipeline. Therefore we have examined two different postprocessing approaches. Probabilistic keyhole filling to remove small isolated regions is a simple heuristic approach which is invented by us. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a one of these studies fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}. Hence, we propose improved segmentation of the parts described using a conditional random field algorithm as a second approach.
+In this paper we investigate the hypothesis whether spatial regularization improves the segmentation of the given segmentation pipeline. Therefore we have examined two different postprocessing approaches. Probabilistic keyhole filling to remove small isolated regions is a simple heuristic approach which is invented by us. In recent studies, postprocessing algorithm as conditional random field (CRF) achieved promising results. In a one of these studies fully connected CRF Model was used to postprocess segmented images of cities and landscape images \cite{Liu2018}. Other recent studies show the use of an efficient multi-scale 3D convolutional neural network to improve the segmentation \cite{Kamnitsas2017}. Hence, we propose improved segmentation of the parts described using a CRF algorithm as a second approach.
 The chapter Material and Methods gives a quick overview of the whole pipeline. Our main focus is described in the sub-chapter postprocessing including its processes and procedures. The result section is divided by showing our accomplishments in each approach (PKF and CRF). These advantages and disadvantages, as well as our suggested procedure is described in the discussion/conclusion.
 
 \section{Materials and Methods}
@@ -643,7 +643,7 @@ The results are evaluated on whether the improvements are statistically signific
 \section{Results}
 
 \newcommand{\expnumber}[2]{{#1}\mathrm{e}{#2}}
-\subsection{Probabilistic Keyhole Filling}
+\subsection{Probabilistic Keyhole Filling (PKF)}
 The following three figures and the corresponding tables show the results of PKF with optimized parameter ($variance = 20$ and $preserve\; background = true$). In appendix \ref{sec_bb} the figures are shown again in full size.
 
 
@@ -742,9 +742,9 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 \end{figure}
 
 
-In figure \ref{fig_pkf_dice} and the corresponding table \ref{tbl_pkf_dice} we can see that the PKF leads to changes of the mean of the Dice coefficient in the order of $10^-3$ or below. In the case of the White and Grey matter it leads to a decrease and for the Hippocampus, Amygdala and Thalamus to an increase of the Dice coefficient. Although the changes are small, they are statistically significant, which can be seen in table \ref{tbl_pkf_dice}.In figure \ref{fig_pkf-hd} and the corresponding table \ref{tbl_pkf_hd} we can see that the PKF leads to an decrease of the Hausdorff distance for all labels except the Gray Matter. Especially for the label Thalamus the Hausdorff distance is reduced by almost a factor of three. Except the for the Gray Matter, the sign test indicates that all the changes are significant under a significance level $\alpha = 5\%$, as it is shown in table \ref{tbl_pkf_hd}.In figure \ref{fig_pkf} the visual improvement of the postprocessing can be seen. The red circle highlights the area where the miss labeled segmentation is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
+In figure \ref{fig_pkf_dice} and the corresponding table \ref{tbl_pkf_dice} we can see that the PKF leads to changes of the mean of the Dice coefficient in the order of $10^-3$ or below. In the case of the labels White and Grey Matter it leads to a decrease and for the labels Hippocampus, Amygdala and Thalamus to an increase of the Dice coefficient. Although the changes are small, they are statistically significant, which can be seen in table \ref{tbl_pkf_dice}. In figure \ref{fig_pkf-hd} and the corresponding table \ref{tbl_pkf_hd} we can see that the PKF leads to an decrease of the Hausdorff distance for all labels except the label Grey Matter. Especially for the label Thalamus the Hausdorff distance is reduced by almost a factor of three. Except the label Grey Matter, the sign test on all labels indicates that all the changes are significant under a significance level $\alpha = 5\%$, as it is shown in table \ref{tbl_pkf_hd}. In figure \ref{fig_pkf} the visual improvement of the postprocessing can be seen. The red circle highlights the area where the miss labeled segmentation is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
 
-\subsection{DCRF}
+\subsection{Dense Conditional Random Field (DCRF)}
 The following three figures and the corresponding tables show the results of DCRF with optimized parameter ($\theta_{\alpha} = 7$, $\theta_{\beta} = 3$ and $\theta_{\gamma} = 1$). In appendix \ref{sec_bb} the figures are shown again in full size.
 \begin{figure}[ht]
 \centering
@@ -832,21 +832,21 @@ $CI_{high}$	&$\expnumber{6.92}{-02}$&$\expnumber{1.00}{+00}$&$\expnumber{-4.23}{
 \label{fig_dcrf}
 \end{figure}
 
-Figure \ref{fig_dcrf_dice} and the corresponding table \ref{tbl_dcrf_dice} show the that the DCRF algorithm results in a change of the Dice coefficient in the order of $10^-2$ or below. For the labels White and Grey Matter the postprocessing with DCRF leads to a decrease of the Dice coefficient. Whereas for the labels Hippocampus, Amygdala and Thalamus it leads to an increase of the Dice coefficient. The paired, two-sided t-test indicates that all of the changes are significant, as it is shown in table \ref{tbl_dcrf_dice}. In figure \ref{fig_dcrf-hd} and the corresponding table \ref{tbl_dcrf_hd} we can see, that the DCRF leads to a decrease of the Hausdorff distance for all labels except the Gray Matter, where we can see an increase. Among all labels the largest decrease in the Hausdorff distance is obtained for the label Thalamus. The paired, two-sided sign test indicates that all the changes are significant under a significance level $\alpha = 5\%$, as we can see in table \ref{tbl_dcrf_hd}.
+Figure \ref{fig_dcrf_dice} and the corresponding table \ref{tbl_dcrf_dice} show the that the DCRF algorithm results in a change of the Dice coefficient in the order of $10^-2$ or below. For the labels White and Grey Matter the postprocessing with DCRF leads to a decrease of the Dice coefficient. Whereas for the labels Hippocampus, Amygdala and Thalamus it leads to an increase of the Dice coefficient. The paired, two-sided t-test indicates that all of the changes are significant, as it is shown in table \ref{tbl_dcrf_dice}. In figure \ref{fig_dcrf-hd} and the corresponding table \ref{tbl_dcrf_hd} we can see, that the DCRF leads to a decrease of the Hausdorff distance for all labels except the label Grey Matter, where we can see an increase. Among all labels the largest decrease in the Hausdorff distance is obtained for the label Thalamus. The paired, two-sided sign test indicates that all the changes are significant under a significance level $\alpha = 5\%$, as we can see in table \ref{tbl_dcrf_hd}.
 
-Figure \ref{fig_dcrf} shows the graphical difference of DCRF compared to the ground truth and no postprocessing. The improvement of the label thalamus comes clearly forward, since again the red parts to the left and right of the thalamus regions are removed. These removed parts including some keyhole background regions are filled with the green label of white matter. 
-The boundaries of the grey matter (GM) are blown up, i.e. GM is less sparse in the postprocessing image using DCRF compared to the ground truth and the image without postprocessing.
+Figure \ref{fig_dcrf} shows the graphical difference of DCRF compared to the ground truth and no postprocessing. The improvement of the label Thalamus comes clearly forward, since again the red parts to the left and right of the Thalamus labeled regions are removed. These removed parts including some keyhole background regions are filled with the green label White Matter. 
+The boundaries of the label Grey Matter are blown up, i.e. Grey Matter is less sparse in the postprocessing image using DCRF compared to the ground truth and the image without postprocessing.
 
 %\newpage
 %\twocolumn
 \section{Discussion}
-As shown in figure \ref{fig_pkf_dice}, the PKF algorithm has only a small influence in the range of $10^{-3}$ on the Dice coefficient. This could be due to the fact that only single voxels are relabeled by the algorithm, which does not strongly influence the Dice coefficient. In comparison, the DCRF algorithm produces a higher change in the dice coefficient in the range of $10^{-1}$ at most. In contrast to the PKF, this algorithm optimizes entire segment ranges, which could explain the stronger change in the dice coefficient.
-As shown in the plots of the hausdorff distance, the largest changes by the PKF as well as the DCRF are achieved in the labels hippocampus, amygdala and thalamus. This is most likely due to the fact that before postprocessing all these labels contained incorrectly assigned voxels far away from the original structure. Because the PKF as well as the DCRF have the goal to correct incorrectly labeled voxels, the Hausdorff distance can be reduced and therefore improved by both approaches.
-According to the statistical test, all differences are statistically significant except for the change in the Hausdorff distance by the PKF for the White matter label. Despite this significance, the influence is not graphically evident in every case. Especially the changes of the Dice coefficients by the PKF seem to reflect a negligible influence. In contrast, the DCRF leads to much more uniform segments with smoother boundaries, which is most likely reflected in the larger changes in the dice coefficient. The result of the reduced Hausdorff distance is clearly visible in both cases. It is reflected in the reduced number of incorrectly segmented regions compared between the segmentation without postprocessing and with postprocessing (e.g. figure \ref{fig_pkf} in the area outlined in red).
+As shown in figure \ref{fig_pkf_dice}, the PKF algorithm has only a small influence in the range of $10^{-3}$ on the Dice coefficient. This could be due to the fact that only single voxels are relabeled by the algorithm, which does not strongly influence the Dice coefficient. In comparison, the DCRF algorithm produces a higher change in the Dice coefficient in the range of $10^{-1}$ at most. In contrast to the PKF, this algorithm optimizes entire segment ranges, which could explain the stronger change in the Dice coefficient.
+As shown in the plots of the Hausdorff distance, the largest changes by the PKF as well as the DCRF are achieved in the labels Hippocampus, Amygdala and Thalamus. This is most likely due to the fact that before postprocessing all these labels contained incorrectly assigned voxels far away from the original structure. Because the PKF as well as the DCRF have the goal to correct incorrectly labeled voxels, the Hausdorff distance can be reduced and therefore improved by both approaches.
+According to the statistical test, all differences are statistically significant except for the change in the Hausdorff distance by the PKF for the label White Matter. Despite this significance, the influence is not graphically evident in every case. Especially the changes of the Dice coefficients by the PKF seem to reflect a negligible influence. In contrast, the DCRF leads to much more uniform segments with smoother boundaries, which is most likely reflected in the larger changes in the Dice coefficient. The result of the reduced Hausdorff distance is clearly visible in both cases. It is reflected in the reduced number of incorrectly segmented regions compared between the segmentation without postprocessing and with postprocessing (e.g. figure \ref{fig_pkf} in the area outlined in red).
 
 
 \section{Conclusion}
-With respect to our hypothesis, we can conclude that spatial regularization can improve the segmentation of the given image processing pipeline. Both approaches are able to correct mislabelled voxels and thus lead to an improvement of the hausdorff distance. In contrast to the PKF method, the DCRF is also able to influence the uniformity and the boundaries of the individual segments to a higher extent, which also leads to an improvement of the dice coefficient.
+With respect to our hypothesis, we can conclude that spatial regularization can improve the segmentation of the given image processing pipeline. Both approaches are able to correct mislabelled voxels and thus lead to an improvement of the Hausdorff distance. In contrast to the PKF method, the DCRF is also able to influence the uniformity and the boundaries of the individual segments to a higher extent, which also leads to an improvement of the Dice coefficient.
 In conclusion, we can say that for a rough improvement of mislabelled voxels a simple approach like PKF can be sufficient. If a finer and more sophisticated correction of the segments is required, a more complex method like DCRF should be used. With the disadvantage that the increased complexity of the enhancement requires a more elaborate fine-tuning of the parameters of DCRF.
 
 
@@ -895,7 +895,7 @@ In this section the boxplots are shown again but bigger. Our intention is to giv
 \begin{figure}[h!]
 \centering
 \includegraphics[width=4.9in]{img/boxplots/PKF-Dice.png}
-\caption{PKF Dice index compared to the Dice index without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice}, next to the average Dice indices and the confidence intervals of each label.}
+\caption{PKF Dice coefficient compared to the Dice coefficient without postprocessing (no pp). The corresponding p-values are shown in the table \ref{tbl_pkf_dice}, next to the average Dice coefficients and the confidence intervals of each label.}
 \label{fig_pkf_dice_appendix}
 \end{figure}
 
@@ -920,7 +920,7 @@ In this section the boxplots are shown again but bigger. Our intention is to giv
 \begin{figure}[h!]
 \centering
 \includegraphics[width=4.9in]{img/boxplots/DCRF-DICE.png}
-\caption{DCRF Dice index compared to the Dice index without postprocessing (no pp)}
+\caption{DCRF Dice coefficient compared to the Dice coefficient without postprocessing (no pp)}
 \label{fig_dcrf_dice_appendix}
 \end{figure}
 
@@ -948,35 +948,35 @@ These QQ-Plots helped us to chose the correct statistical test to evaluate the w
 \begin{figure}[hb]
 \centering
 \includegraphics[width=5.6in]{img/QQ_plots_PKF/GreyMatter.png}
-\caption{QQ-Plot of grey matter}
+\caption{QQ-Plot of the label Grey Matter}
 \label{fig_qq_gm}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=5.6in]{img/QQ_plots_PKF/WhiteMatter.png}
-\caption{QQ-Plot of white matter}
+\caption{QQ-Plot of the label White Matter}
 \label{fig_qq_wm}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=5.6in]{img/QQ_plots_PKF/Hippocampus.png}
-\caption{QQ-Plot of hippocampus}
+\caption{QQ-Plot of the label Hippocampus}
 \label{fig_qq_h}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=5.6in]{img/QQ_plots_PKF/Thalamus.png}
-\caption{QQ-Plot of thalamus}
+\caption{QQ-Plot of the label Thalamus}
 \label{fig_qq_t}
 \end{figure}
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=5.6in]{img/QQ_plots_PKF/Amygdala.png}
-\caption{QQ-Plot of amygdala}
+\caption{QQ-Plot of the label Amygdala}
 \label{fig_qq_a}
 \end{figure}
 
