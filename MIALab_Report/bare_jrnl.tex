@@ -594,7 +594,7 @@ The data used for the training of the model is from 30 unrelated healthy subject
 \subsection{Methods}
 \begin{figure}[h!]
 \centering
-\includegraphics[width=2.5in]{img/pipeline}
+\includegraphics[width=2in]{img/pipeline}
 \caption{Schematic representation of the image processing pipeline.}
 \label{fig_pipeline}
 \end{figure}
@@ -639,12 +639,12 @@ The DCRF model was first published by Philipp Krahenbühl and Vladlen Koltun in 
 $\theta_\alpha$, $\theta_\beta$ for the appearance kernel and $\theta_\gamma$ for the smoothness kernel are the weights of the equation and were optimised using a grid search method. The higher these weights are, the less influence this kernel has in the DCRF model.
 \subsubsection{Data Analysis}
 The results are evaluated on whether the improvements are statistically significant (significance level $\alpha = 5\%$). Because the change of the metrics before and after the postprocessing is compared, the data is considered to be paired. Therefore, the tests are performed on the differences of the metrics before and after the postprocessing of a data set. Depending on the distribution of the obtained data a different statistical test is used. A paired, two-sided t-test is used if the distribution is approximately normal and a paired, two-sided sign test otherwise. The distribution is evaluated graphically using QQ-plots. The data is considered approximately normal distributed if all data points lie within the $95\%$ confidence bounds. The corresponding QQ-Plots can be found in Appendix \ref{sec_qq} QQ-Plot. For our data we used the paired two-sided t-test to evaluate the difference in the Dice coefficient and the sign test to evaluate the the difference in the Hausdorff distance. 
-\onecolumn
+%\onecolumn
 \section{Results}
 
 \newcommand{\expnumber}[2]{{#1}\mathrm{e}{#2}}
 \subsection{Probabilistic Keyhole Filling}
-The following three figures and the corresponding tables show the results of PKF with optimized parameter ($variance = 20$ and $preserve\; background = true$). In appendix \ref{sec_bb} the boxplots are shown again in full size.
+The following three figures and the corresponding tables show the results of PKF with optimized parameter ($variance = 20$ and $preserve\; background = true$). In appendix \ref{sec_bb} the figures are shown again in full size.
 
 
 \begin{figure}[ht]
@@ -745,7 +745,7 @@ $CI_{high}$&$\expnumber{0.00}{+00}$&$\expnumber{0.00}{+00}$&$\expnumber{-6.90}{-
 In figure \ref{fig_pkf_dice} and the corresponding table \ref{tbl_pkf_dice} we can see that the PKF leads to changes of the mean of the Dice coefficient in the order of $10^-3$ or below. In the case of the White and Grey matter it leads to a decrease and for the Hippocampus, Amygdala and Thalamus to an increase of the Dice coefficient. Although the changes are small, they are statistically significant, which can be seen in table \ref{tbl_pkf_dice}.In figure \ref{fig_pkf-hd} and the corresponding table \ref{tbl_pkf_hd} we can see that the PKF leads to an decrease of the Hausdorff distance for all labels except the Gray Matter. Especially for the label Thalamus the Hausdorff distance is reduced by almost a factor of three. Except the for the Gray Matter, the sign test indicates that all the changes are significant under a significance level $\alpha = 5\%$, as it is shown in table \ref{tbl_pkf_hd}.In figure \ref{fig_pkf} the visual improvement of the postprocessing can be seen. The red circle highlights the area where the miss labeled segmentation is corrected. Additionally the figure demonstrates that with the PKF method the overall uniformity of the segments is increased and less holes (Background) or miss labeled voxels can be found.
 
 \subsection{DCRF}
-The following three figures and the corresponding tables show the results of DCRF with optimized parameter ($\theta_{\alpha} = 7$, $\theta_{\beta} = 3$ and $\theta_{\gamma} = 1$). In appendix \ref{sec_bb} the boxplots are shown again in full size.
+The following three figures and the corresponding tables show the results of DCRF with optimized parameter ($\theta_{\alpha} = 7$, $\theta_{\beta} = 3$ and $\theta_{\gamma} = 1$). In appendix \ref{sec_bb} the figures are shown again in full size.
 \begin{figure}[ht]
 \centering
 %\includegraphics[width=3.4in]{img/boxplots/DCRF-DICE.png}
