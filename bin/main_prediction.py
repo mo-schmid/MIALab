@@ -34,9 +34,10 @@ LOADING_KEYS = [structure.BrainImageTypes.T1w,
 def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_dir: str):
     """Brain tissue segmentation using decision forests.
 
-    The main_prediction routine executes the medical image analysis pipeline up to the segmentation step
-    and stores the intermediate data in the "../data/tmp_results" folder  :
+    Section of the original main routine. Executes pre-processing and prediction part of the medical image
+    analysis pipeline and and saves the temporary data:
 
+        Is carried out in this section of the pipeline
         - Image loading
         - Registration
         - Pre-processing
@@ -130,40 +131,6 @@ def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_di
         sitk.WriteImage(images_probabilities[i], os.path.join(result_dir, images_test[i].id_ + '_PROB.mha'), True)
 
 
-
-
-
-
-
-    # post-process segmentation and evaluate with post-processing
-    # post_process_params = {'simple_post': True}
-    # images_post_processed = putil.post_process_batch(images_test, images_prediction, images_probabilities,
-    #                                                  post_process_params, multi_process=False)
-    #
-    # for i, img in enumerate(images_test):
-    #     evaluator.evaluate(images_post_processed[i], img.images[structure.BrainImageTypes.GroundTruth],
-    #                        img.id_ + '-PP')
-    #
-    #     # save results
-    #     sitk.WriteImage(images_prediction[i], os.path.join(result_dir, images_test[i].id_ + '_SEG.mha'), True)
-    #     sitk.WriteImage(images_post_processed[i], os.path.join(result_dir, images_test[i].id_ + '_SEG-PP.mha'), True)
-    #
-    # # use two writers to report the results
-    # os.makedirs(result_dir, exist_ok=True)  # generate result directory, if it does not exists
-    # result_file = os.path.join(result_dir, 'results.csv')
-    # writer.CSVWriter(result_file).write(evaluator.results)
-    #
-    # print('\nSubject-wise results...')
-    # writer.ConsoleWriter().write(evaluator.results)
-    #
-    # # report also mean and standard deviation among all subjects
-    # result_summary_file = os.path.join(result_dir, 'results_summary.csv')
-    # functions = {'MEAN': np.mean, 'STD': np.std}
-    # writer.CSVStatisticsWriter(result_summary_file, functions=functions).write(evaluator.results)
-    # print('\nAggregated statistic results...')
-    # writer.ConsoleStatisticsWriter(functions=functions).write(evaluator.results)
-
-    # clear results such that the evaluator is ready for the next evaluation
     evaluator.clear()
 
 

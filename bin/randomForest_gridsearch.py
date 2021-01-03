@@ -36,7 +36,8 @@ LOADING_KEYS = [structure.BrainImageTypes.T1w,
 def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_dir: str):
     """Brain tissue segmentation using decision forests.
 
-    The main routine executes the medical image analysis pipeline:
+    Altered version of the original main routine. Executes the medical image analysis pipeline  with a grid search for
+    the random forest parameters:
 
         - Image loading
         - Registration

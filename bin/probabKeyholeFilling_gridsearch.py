@@ -34,15 +34,19 @@ LOADING_KEYS = [structure.BrainImageTypes.T1w,
 def main(result_dir: str, data_atlas_dir: str, data_train_dir: str, data_test_dir: str):
     """Brain tissue segmentation using decision forests.
 
-    The main routine executes the medical image analysis pipeline:
+    Section of the original main routine. Executes gird search of the probabilistic keyhole filling method parameters:
 
+        Must be done separately in advance:
         - Image loading
         - Registration
         - Pre-processing
         - Feature extraction
         - Decision forest classifier model building
         - Segmentation using the decision forest classifier model on unseen images
-        - Post-processing of the segmentation
+
+        Is carried out in this section of the pipeline
+        - Loading of temporary data
+        - Grid search of PKF parameter of the segmentation
         - Evaluation of the segmentation
     """
 
